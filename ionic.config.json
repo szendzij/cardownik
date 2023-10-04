@@ -1,0 +1,8 @@
+{
+  "name": "Cardownik",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular",
+  "id": "49ed72f9"
+}
