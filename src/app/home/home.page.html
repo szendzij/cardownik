@@ -1,0 +1,39 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Moje karty
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <ion-card *ngFor="let barcode of barcodes">
+    <ion-card-content>
+      <ion-item>
+        <ion-label slot="start">
+          <strong>{{barcode.displayValue || ''}}</strong><br />
+          <ion-text>{{barcode.format}}</ion-text>
+        </ion-label>
+        <div slot="end">
+          <qr-code slot="end" [value]="barcode.displayValue" size="50" errorCorrectionLevel="M"></qr-code>
+        </div>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button size="small">
+      <ion-icon name="chevron-up-circle"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button>
+        <ion-icon name="barcode-outline" (click)="startScan()"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button>
+        <ion-icon name="image-outline" (click)="readBarcodeFromImage()"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+
+</ion-content>
