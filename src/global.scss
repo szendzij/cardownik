@@ -16,7 +16,7 @@
 @import "@ionic/angular/css/normalize.css";
 @import "@ionic/angular/css/structure.css";
 @import "@ionic/angular/css/typography.css";
-@import '@ionic/angular/css/display.css';
+@import "@ionic/angular/css/display.css";
 
 /* Optional CSS utils that can be commented out */
 @import "@ionic/angular/css/padding.css";
@@ -24,3 +24,27 @@
 @import "@ionic/angular/css/text-alignment.css";
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
+
+/*
+ * Optional CSS
+ * -----------------------------------
+ */
+
+/* This sets a different background and item background in light mode on ios */
+.ios body {
+  --ion-background-color: #f2f2f6;
+  --ion-toolbar-background: var(--ion-background-color);
+  --ion-item-background: #fff;
+}
+
+/* This sets a different background and item background in light mode on md */
+.md body {
+  --ion-background-color: #f9f9f9;
+  --ion-toolbar-background: var(--ion-background-color);
+  --ion-item-background: #fff;
+}
+
+/* This is added for the flashing that happens when toggling between themes */
+ion-item {
+  --transition: none;
+}

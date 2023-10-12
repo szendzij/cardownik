@@ -45,6 +45,7 @@ export class HomePage implements OnInit {
       (ev as RefresherCustomEvent).detail.complete();
     }, 3000);
   }
+
   public getCards(): Cards[] {
     this.cards = this.dataService.getData();
     return this.cards;
@@ -57,7 +58,6 @@ export class HomePage implements OnInit {
       this.formGroup.get('lensFacing')?.value || LensFacing.Back;
     const element = await this.dialogService.showModal({
       component: BarcodeScanningModalComponent,
-      // Set `visibility` to `visible` to show the modal (see `src/theme/variables.scss`)
       cssClass: 'barcode-scanning-modal',
       showBackdrop: false,
       componentProps: {
@@ -82,20 +82,13 @@ export class HomePage implements OnInit {
     }
     const formats = this.formGroup.get('formats')?.value || [];
     const { barcodes } = await BarcodeScanner.readBarcodesFromImage({
-      path,
       formats,
+      path,
     });
     // this.barcodes = barcodes;
-    this.barcodes = barcodes;
-
+    this.barcodes.push(...barcodes);
   }
 
-  public async scan(): Promise<void> {
-    const formats = this.formGroup.get('formats')?.value || [];
-    const { barcodes } = await BarcodeScanner.scan({
-      formats,
-    });
-    this.barcodes = barcodes;
-  }
+
 
 }
