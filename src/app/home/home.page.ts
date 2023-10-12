@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Cards, DataService } from '../services/data.service';
-import { RefresherCustomEvent } from '@ionic/angular';
+import { RefresherCustomEvent, ToastController } from '@ionic/angular';
 import { DialogService } from '../core';
 import { UntypedFormGroup, UntypedFormControl } from '@angular/forms';
 import { Barcode, BarcodeFormat, BarcodeScanner, LensFacing } from '@capacitor-mlkit/barcode-scanning';
 import { FilePicker } from '@capawesome/capacitor-file-picker';
 import { BarcodeScanningModalComponent } from '../barcode-scanning-modal/barcode-scanning-modal.component';
+import { AppStorageService, Card } from './../core/services/app-storage/app-storage.service';
 
 
 @Component({
@@ -14,7 +14,10 @@ import { BarcodeScanningModalComponent } from '../barcode-scanning-modal/barcode
   styleUrls: ['home.page.scss']
 })
 export class HomePage implements OnInit {
-  public cards: Cards[] = [];
+  public value: any = '';
+
+  card: Card[] = [];
+
   public readonly barcodeFormat = BarcodeFormat;
   public readonly lensFacing = LensFacing;
   public barcodes: Barcode[] = [];
@@ -27,11 +30,10 @@ export class HomePage implements OnInit {
   });
 
   constructor(
-    private dataService: DataService,
+    private appStorageService: AppStorageService,
     private dialogService: DialogService) { }
 
   ngOnInit() {
-    this.getCards();
     BarcodeScanner.isSupported().then((result) => {
       this.isSupported = result.supported;
     });
@@ -40,16 +42,25 @@ export class HomePage implements OnInit {
     });
   }
 
-  public refresh(ev: any) {
-    setTimeout(() => {
-      (ev as RefresherCustomEvent).detail.complete();
-    }, 3000);
+  async setValue() {
+    await this.appStorageService.set('country', 'Polska');
   }
 
-  public getCards(): Cards[] {
-    this.cards = this.dataService.getData();
-    return this.cards;
+  async getValue() {
+    this.value = await this.appStorageService.get('country');
   }
+
+  async removeValue() {
+    await this.appStorageService.remove('country');
+  }
+
+  async clearStorage() {
+    await this.appStorageService.clear();
+  }
+
+
+
+
 
 
   public async startScan(): Promise<void> {

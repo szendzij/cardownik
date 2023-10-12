@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Preferences } from '@capacitor/preferences';
+import { AppStorageService } from '../core/services/app-storage/app-storage.service';
 
 @Component({
   selector: 'app-Settings',
@@ -10,25 +10,26 @@ export class SettingsPage implements OnInit {
   themeToggle: boolean = false;
   darkMode: boolean = false;
 
-  constructor() { }
+  constructor(private appStorageService: AppStorageService) { }
 
   ngOnInit(): void {
     this.checkAppMode;
   }
 
   private async checkAppMode() {
-    const checkIsDarkMode = await Preferences.get({ key: 'darkModeActivated' });
+    const checkIsDarkMode = await this.appStorageService.get('darkModeActivated');
+    console.log(checkIsDarkMode);
     checkIsDarkMode?.value == 'true' ? (this.darkMode = true) : (this.darkMode = false);
     document.body.classList.toggle('dark', this.darkMode);
   }
 
-  public toggleDarkMode() {
+  public async toggleDarkMode() {
     this.darkMode = !this.darkMode;
     document.body.classList.toggle('dark', this.darkMode);
     if (this.darkMode) {
-      Preferences.set({ key: 'darkModeActivated', value: 'true' });
+      await this.appStorageService.set('darkModeActivated', 'true');
     } else {
-      Preferences.set({ key: 'darkModeActivated', value: 'false' });
+      this.appStorageService.set('darkModeActivated', 'false');
     }
   }
 
