@@ -238,7 +238,7 @@ body.dark {
   * Barcode Scanning
   * -------------------------------------------
   */
-body.barcode-scanning-active {
+body.barcode-scanning-active.dark {
   visibility: hidden;
   --background: transparent;
   --ion-background-color: transparent;
@@ -248,9 +248,7 @@ body.barcode-scanning-active {
   visibility: visible;
 }
 
-@media (prefers-color-scheme: dark) {
-  .barcode-scanning-modal {
-    --background: transparent;
-    --ion-background-color: transparent;
-  }
+.barcode-scanning-modal.dark {
+  --background: transparent;
+  --ion-background-color: transparent;
 }

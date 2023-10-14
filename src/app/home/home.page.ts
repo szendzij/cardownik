@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { RefresherCustomEvent, ToastController } from '@ionic/angular';
 import { DialogService } from '../core';
 import { UntypedFormGroup, UntypedFormControl } from '@angular/forms';
 import { Barcode, BarcodeFormat, BarcodeScanner, LensFacing } from '@capacitor-mlkit/barcode-scanning';
 import { FilePicker } from '@capawesome/capacitor-file-picker';
 import { BarcodeScanningModalComponent } from '../barcode-scanning-modal/barcode-scanning-modal.component';
-import { AppStorageService, Card } from './../core/services/app-storage/app-storage.service';
+import { AppStorageService } from './../core/services/app-storage/app-storage.service';
+import { Card } from '../core/interface/card';
 
 
 @Component({
@@ -48,10 +48,14 @@ export class HomePage implements OnInit {
 
   async getValue() {
     this.value = await this.appStorageService.get('country');
+    console.log(this.value);
   }
 
   async removeValue() {
     await this.appStorageService.remove('country');
+    console.log('removeValue');
+    await this.appStorageService.keys();
+
   }
 
   async clearStorage() {

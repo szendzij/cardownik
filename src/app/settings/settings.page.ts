@@ -1,36 +1,56 @@
 import { Component, OnInit } from '@angular/core';
 import { AppStorageService } from '../core/services/app-storage/app-storage.service';
+import { BarcodeFormat, BarcodeScanner, LensFacing } from '@capacitor-mlkit/barcode-scanning';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
-  selector: 'app-Settings',
+  selector: 'app-settings',
   templateUrl: 'settings.page.html',
   styleUrls: ['settings.page.scss']
 })
 export class SettingsPage implements OnInit {
-  themeToggle: boolean = false;
-  darkMode: boolean = false;
+
+  public darkMode?: boolean;
+  public isSupported = false;
+  public isPermissionGranted = false;
+  public readonly barcodeFormat = BarcodeFormat;
+  public readonly lensFacing = LensFacing;
+
+
+  public settingForm = new FormGroup({
+    formats: new FormControl([]),
+    lensFacing: new FormControl(LensFacing.Back),
+  });
 
   constructor(private appStorageService: AppStorageService) { }
 
-  ngOnInit(): void {
-    this.checkAppMode;
+  async ngOnInit(): Promise<void> {
+    this.darkMode = await this.appStorageService.get('darkModeActivated');
+    BarcodeScanner.isSupported().then((result) => {
+      this.isSupported = result.supported;
+    });
+    BarcodeScanner.checkPermissions().then((result) => {
+      this.isPermissionGranted = result.camera === 'granted';
+    });
   }
 
-  private async checkAppMode() {
-    const checkIsDarkMode = await this.appStorageService.get('darkModeActivated');
-    console.log(checkIsDarkMode);
-    checkIsDarkMode?.value == 'true' ? (this.darkMode = true) : (this.darkMode = false);
-    document.body.classList.toggle('dark', this.darkMode);
-  }
-
-  public async toggleDarkMode() {
+  public toggleDarkMode() {
     this.darkMode = !this.darkMode;
     document.body.classList.toggle('dark', this.darkMode);
     if (this.darkMode) {
-      await this.appStorageService.set('darkModeActivated', 'true');
+      this.appStorageService.set('darkModeActivated', true);
     } else {
-      this.appStorageService.set('darkModeActivated', 'false');
+      this.appStorageService.set('darkModeActivated', false);
     }
   }
+
+  public async openSettings(): Promise<void> {
+    await BarcodeScanner.openSettings();
+  }
+
+  public async requestPermissions(): Promise<void> {
+    await BarcodeScanner.requestPermissions();
+  }
+
 
 }

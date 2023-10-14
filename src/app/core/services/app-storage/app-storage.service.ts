@@ -18,43 +18,32 @@ const CARD_KEY = 'my_cards';
 export class AppStorageService {
   private _storage: Storage | null = null;
 
-
-  constructor(private storage: Storage) {
-    this.init();
-  }
+  constructor(private storage: Storage) { }
 
   async init() {
-    // If using, define drivers here: await this.storage.defineDriver(/*...*/);
     const storage = await this.storage.create();
     this._storage = storage;
   }
 
-
-  public async set(key: string, value: any) {
-    let result = await this._storage?.set(key, value);
-    console.log(result)
+  public async set(key: string, value: any): Promise<void> {
+    await this._storage?.set(key, value).then(value => { return value });
   }
 
-  public async get(key: string) {
-    let value = await this._storage?.get(key);
-    console.log(value);
-    return value;
+  public async get(key: string): Promise<any> {
+    const data = await this._storage?.get(key).then(value => { return value });
+    return data;
   }
 
-  public async remove(key: string) {
-    let value = await this._storage?.remove(key);
-    console.log(value);
-    return value;
+  public async remove(key: string): Promise<void> {
+    await this._storage?.remove(key).then(value => { return value });
   }
 
-  public async clear() {
-    await this._storage?.clear()
+  public async clear(): Promise<void> {
+    await this._storage?.clear().then(value => { return value });
   }
 
-  public async keys(key: string) {
-    let value = await this._storage?.keys();
-    console.log(value);
-    return value;
+  public async keys(): Promise<void> {
+    await this._storage?.keys().then(value => { return value });
   }
 
 }

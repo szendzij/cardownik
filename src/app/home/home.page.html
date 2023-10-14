@@ -22,45 +22,12 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-button id="open-toast" (click)="setValue()">Set value</ion-button>
-  <ion-toast trigger="open-toast" message="This toast will disappear after 5 seconds" [duration]="5000"></ion-toast>
+  <ion-button (click)="setValue()">Set value</ion-button>
+  <!-- <ion-toast trigger="open-toast" message="This toast will disappear after 5 seconds" [duration]="5000"></ion-toast> -->
 
   <ion-button (click)="getValue()">Get value</ion-button>
   <ion-button (click)="removeValue()">Remove value</ion-button>
-  <ion-button (click)="clearStorage()">Clear Storage</ion-button>
-
-
-  <!-- <ion-item>
-    <ion-label position="fixed">Title</ion-label>
-    <ion-input [(ngModel)]="newItem.title"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label position="fixed">Value</ion-label>
-    <ion-input [(ngModel)]="newItem.value"></ion-input>
-  </ion-item>
-
-  <ion-button expand="full" (click)="addItem()">Add card</ion-button>
-
-  <ion-list #myList>
-    <ion-list-header>Karty</ion-list-header>
-
-    <ion-list-sliding *ngFor="let card of cards">
-      <ion-item>
-        <ion-label text-wrap>
-          <h3>{{card.shopName}}</h3>
-          <p>{{card.shopLocalization}}</p>
-          <p>{{card.modified | date:'short'}}</p>
-        </ion-label>
-      </ion-item>
-    </ion-list-sliding>
-
-    <ion-item-options side="end">
-      <ion-item-option color="secondary" (click)="updateCard(card)"></ion-item-option>
-      <ion-item-option color="danger" (click)="deleteCard(card)"></ion-item-option>
-    </ion-item-options>
-  </ion-list> -->
-
-  <!-- <div>{{value}}</div> -->
+  <!-- <ion-button (click)="clearStorage()">Clear Storage</ion-button> -->
 
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">
     <ion-fab-button size="small">

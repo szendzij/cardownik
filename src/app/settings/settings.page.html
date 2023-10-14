@@ -13,5 +13,39 @@
       <ion-toggle [checked]="darkMode" (ionChange)="toggleDarkMode()" justify="space-between">Tryb ciemny</ion-toggle>
     </ion-item>
   </ion-list>
+  <ion-card>
+    <ion-card-content>
+      <form [formGroup]="settingForm">
+        <ion-item>
+          <ion-label position="fixed">Formats</ion-label>
+          <ion-select multiple="true" placeholder="Formats" formControlName="formats">
+            <ion-select-option [value]="barcodeFormat.Aztec">Aztec</ion-select-option>
+            <ion-select-option [value]="barcodeFormat.Codabar">Codabar</ion-select-option>
+            <ion-select-option [value]="barcodeFormat.Code39">Code39</ion-select-option>
+            <ion-select-option [value]="barcodeFormat.Code93">Code93</ion-select-option>
+            <ion-select-option [value]="barcodeFormat.Code128">Code128</ion-select-option>
+            <ion-select-option [value]="barcodeFormat.DataMatrix">DataMatrix</ion-select-option>
+            <ion-select-option [value]="barcodeFormat.Ean8">Ean8</ion-select-option>
+            <ion-select-option [value]="barcodeFormat.Ean13">Ean13</ion-select-option>
+            <ion-select-option [value]="barcodeFormat.Itf">Itf</ion-select-option>
+            <ion-select-option [value]="barcodeFormat.Pdf417">Pdf417</ion-select-option>
+            <ion-select-option [value]="barcodeFormat.QrCode">QrCode</ion-select-option>
+            <ion-select-option [value]="barcodeFormat.UpcA">UpcA</ion-select-option>
+            <ion-select-option [value]="barcodeFormat.UpcE">UpcE</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label position="fixed">Lens Facing</ion-label>
+          <ion-select formControlName="lensFacing">
+            <ion-select-option [value]="lensFacing.Front">Front</ion-select-option>
+            <ion-select-option [value]="lensFacing.Back">Back</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-button expand="block" (click)="openSettings()" [disabled]="!isSupported">Open Settings</ion-button>
+        <ion-button expand="block" (click)="requestPermissions()" [disabled]="isPermissionGranted">Request Permissions
+        </ion-button>
+      </form>
+    </ion-card-content>
+  </ion-card>
 
 </ion-content>
