@@ -6,8 +6,8 @@ import {
   ModalController,
   PopoverController,
 } from '@ionic/angular';
-import { SharedTestingModule } from '@tests/modules';
 import { CameraService } from './camera.service';
+import {SharedTestingModule} from "../../../../tests/modules";
 
 describe('DialogService', () => {
   let service: CameraService;

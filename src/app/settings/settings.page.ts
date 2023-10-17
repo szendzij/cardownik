@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AppStorageService } from '../core/services/app-storage/app-storage.service';
 import { BarcodeFormat, BarcodeScanner, LensFacing } from '@capacitor-mlkit/barcode-scanning';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormGroup, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-settings',
@@ -11,14 +11,18 @@ import { FormControl, FormGroup } from '@angular/forms';
 export class SettingsPage implements OnInit {
 
   public darkMode?: boolean;
+
   public isSupported = false;
   public isPermissionGranted = false;
+
   public readonly barcodeFormat = BarcodeFormat;
   public readonly lensFacing = LensFacing;
 
+  private barcodeFormatValues: string = "";
+  private lensFacingValue: LensFacing | undefined;
 
-  public settingForm = new FormGroup({
-    formats: new FormControl([]),
+  public formGroup = new FormGroup({
+    formats: new FormControl(),
     lensFacing: new FormControl(LensFacing.Back),
   });
 
@@ -26,29 +30,46 @@ export class SettingsPage implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.darkMode = await this.appStorageService.get('darkModeActivated');
+    this.barcodeFormatValues = await this.appStorageService.get('barcodeFormats');
+    this.lensFacingValue = await this.appStorageService.get('lensFacing');
+
+    this.formGroup.patchValue({formats: this.barcodeFormatValues})
+    this.formGroup.patchValue({lensFacing: this.lensFacingValue})
+
+    console.log(this.formGroup.controls.formats.value)
+
     BarcodeScanner.isSupported().then((result) => {
       this.isSupported = result.supported;
     });
     BarcodeScanner.checkPermissions().then((result) => {
       this.isPermissionGranted = result.camera === 'granted';
     });
-  }
 
-  public toggleDarkMode() {
+  }
+  
+  toggleDarkMode() {
     this.darkMode = !this.darkMode;
     document.body.classList.toggle('dark', this.darkMode);
     if (this.darkMode) {
-      this.appStorageService.set('darkModeActivated', true);
+      this.appStorageService.set('darkModeActivated', true).then(r => r);
     } else {
-      this.appStorageService.set('darkModeActivated', false);
+      this.appStorageService.set('darkModeActivated', false).then(r => r);
     }
   }
 
-  public async openSettings(): Promise<void> {
+  saveBarcodeFormats(e:any) {
+    this.appStorageService.set('barcodeFormats', e.detail.value).then(r => r);
+  }
+
+  saveLensFacing(e:any) {
+    this.appStorageService.set('lensFacing', e.detail.value).then(r => r);
+  }
+
+  async openSettings(): Promise<void> {
     await BarcodeScanner.openSettings();
   }
 
-  public async requestPermissions(): Promise<void> {
+  async requestPermissions(): Promise<void> {
     await BarcodeScanner.requestPermissions();
   }
 

@@ -7,7 +7,7 @@ const LOGTAG = '[GlobalErrorHandlerService]';
   providedIn: 'root',
 })
 export class GlobalErrorHandlerService implements ErrorHandler {
-  constructor(private injector: Injector) {}
+  constructor(private injector: Injector) { }
 
   public handleError(error: unknown): void {
     this.handle(error);

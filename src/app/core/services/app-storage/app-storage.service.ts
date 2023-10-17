@@ -30,7 +30,7 @@ export class AppStorageService {
   }
 
   public async get(key: string): Promise<any> {
-    const data = await this._storage?.get(key).then(value => { return value });
+    const data = await this._storage?.get(key).then(value => { return value || null });
     return data;
   }
 
