@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { DialogService } from '../core';
-import { UntypedFormGroup, UntypedFormControl } from '@angular/forms';
-import { Barcode, BarcodeFormat, BarcodeScanner, LensFacing } from '@capacitor-mlkit/barcode-scanning';
-import { FilePicker } from '@capawesome/capacitor-file-picker';
-import { BarcodeScanningModalComponent } from '../barcode-scanning-modal/barcode-scanning-modal.component';
-import { AppStorageService } from './../core/services/app-storage/app-storage.service';
-import { Card } from '../core/interface/card';
+import {Component, OnInit} from '@angular/core';
+import {DialogService} from '../core';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {Barcode, BarcodeFormat, BarcodeScanner, BarcodeValueType, LensFacing} from '@capacitor-mlkit/barcode-scanning';
+import {FilePicker} from '@capawesome/capacitor-file-picker';
+import {BarcodeScanningModalComponent} from '../barcode-scanning-modal/barcode-scanning-modal.component';
+import {AppStorageService} from '../core/services/app-storage/app-storage.service';
+import {Card} from '../core/interface/card';
+import {barcode} from "ionicons/icons";
 
 
 @Component({
@@ -21,6 +22,7 @@ export class HomePage implements OnInit {
   public readonly barcodeFormat = BarcodeFormat;
   public readonly lensFacing = LensFacing;
   public barcodes: Barcode[] = [];
+  public cards: Card[] = [];
   public isSupported = false;
   public isPermissionGranted = false;
 
@@ -31,7 +33,8 @@ export class HomePage implements OnInit {
 
   constructor(
     private appStorageService: AppStorageService,
-    private dialogService: DialogService) { }
+    private dialogService: DialogService) {
+  }
 
   ngOnInit() {
     BarcodeScanner.isSupported().then((result) => {
@@ -42,28 +45,32 @@ export class HomePage implements OnInit {
     });
   }
 
+
   async setValue() {
+    await this.appStorageService.set('card', {
+        modified: new Date().toLocaleString("pl-PL"),
+        shopLocalization: "Rogowska 151/37",
+        id: 1, shopName: "Biedronka",
+        barcode: {displayValue: 'dupa',
+            format: BarcodeFormat.Aztec,
+            valueType: BarcodeValueType.Unknown,
+            rawValue: 'dupa test'
+        }
+    })
     await this.appStorageService.set('country', 'Polska');
   }
 
   async getValue() {
-    this.value = await this.appStorageService.get('country');
+    this.value = await this.appStorageService.get('country').then(r => r);
     console.log(this.value);
   }
 
   async removeValue() {
-    await this.appStorageService.remove('country');
+    await this.appStorageService.remove('country').then(r => r);
     console.log('removeValue');
     await this.appStorageService.keys();
 
   }
-
-  async clearStorage() {
-    await this.appStorageService.clear();
-  }
-
-
-
 
 
 
@@ -83,8 +90,8 @@ export class HomePage implements OnInit {
     element.onDidDismiss().then((result) => {
       const barcode: Barcode | undefined = result.data?.barcode;
       if (barcode) {
-        // this.barcodes = [barcode];
-        this.barcodes.push(barcode)
+        this.barcodes.push(barcode);
+        this.cards.push({id: 0, modified: 0, shopLocalization: "dasdasd", shopName: "test", barcode: barcode});
       }
     });
   }
@@ -100,8 +107,8 @@ export class HomePage implements OnInit {
       formats,
       path,
     });
-    // this.barcodes = barcodes;
     this.barcodes.push(...barcodes);
+
   }
 
 

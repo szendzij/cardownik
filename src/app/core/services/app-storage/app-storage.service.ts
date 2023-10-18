@@ -1,16 +1,5 @@
-import { Injectable } from '@angular/core';
-import { Storage } from '@ionic/storage-angular';
-
-
-export interface Card {
-  id: number,
-  shopName: string,
-  shopLocalization: string,
-  modified: number
-}
-
-const CARD_KEY = 'my_cards';
-
+import {Injectable} from '@angular/core';
+import {Storage} from '@ionic/storage-angular';
 
 @Injectable({
   providedIn: 'root'
@@ -21,8 +10,7 @@ export class AppStorageService {
   constructor(private storage: Storage) { }
 
   async init() {
-    const storage = await this.storage.create();
-    this._storage = storage;
+    this._storage = await this.storage.create();
   }
 
   public async set(key: string, value: any): Promise<void> {
@@ -30,8 +18,9 @@ export class AppStorageService {
   }
 
   public async get(key: string): Promise<any> {
-    const data = await this._storage?.get(key).then(value => { return value || null });
-    return data;
+    return this._storage?.get(key).then(value => {
+      return value || null
+    });
   }
 
   public async remove(key: string): Promise<void> {

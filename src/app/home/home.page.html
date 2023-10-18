@@ -8,26 +8,30 @@
 
 <ion-content [fullscreen]="true">
 
-  <ion-card *ngFor="let barcode of barcodes">
-    <ion-card-content>
-      <ion-item>
-        <ion-label slot="start">
-          <strong>{{barcode.displayValue || ''}}</strong><br />
-          <ion-text>{{barcode.format}}</ion-text>
-        </ion-label>
-        <div slot="end">
-          <qr-code slot="end" [value]="barcode.displayValue" size="50" errorCorrectionLevel="M"></qr-code>
-        </div>
-      </ion-item>
-    </ion-card-content>
-  </ion-card>
-
   <ion-button (click)="setValue()">Set value</ion-button>
   <!-- <ion-toast trigger="open-toast" message="This toast will disappear after 5 seconds" [duration]="5000"></ion-toast> -->
 
   <ion-button (click)="getValue()">Get value</ion-button>
   <ion-button (click)="removeValue()">Remove value</ion-button>
   <!-- <ion-button (click)="clearStorage()">Clear Storage</ion-button> -->
+
+  <ion-card *ngFor="let card of cards">
+    <ion-card-header>
+      <ion-card-title>{{card.shopName}}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label slot="start">
+          <strong>{{card.shopLocalization}}</strong><br />
+          <ion-text>{{card.modified}}</ion-text>
+        </ion-label>
+        <div slot="end">
+          <qr-code slot="end" [value]="card.barcode.displayValue" size="50" errorCorrectionLevel="M"></qr-code>
+        </div>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+
 
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">
     <ion-fab-button size="small">

@@ -36,8 +36,6 @@ export class SettingsPage implements OnInit {
     this.formGroup.patchValue({formats: this.barcodeFormatValues})
     this.formGroup.patchValue({lensFacing: this.lensFacingValue})
 
-    console.log(this.formGroup.controls.formats.value)
-
     BarcodeScanner.isSupported().then((result) => {
       this.isSupported = result.supported;
     });
@@ -46,7 +44,7 @@ export class SettingsPage implements OnInit {
     });
 
   }
-  
+
   toggleDarkMode() {
     this.darkMode = !this.darkMode;
     document.body.classList.toggle('dark', this.darkMode);
