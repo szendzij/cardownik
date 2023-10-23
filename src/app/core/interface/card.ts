@@ -5,5 +5,5 @@ export interface Card {
     shopName: string,
     barcode: Barcode;
     shopLocalization: string,
-    modified: number
+    modified: string
 }

@@ -13,22 +13,30 @@
 
   <ion-button (click)="getValue()">Get value</ion-button>
   <ion-button (click)="removeValue()">Remove value</ion-button>
+  <ion-button (click)="showAddCardForm()">showAddCardForm</ion-button>
   <!-- <ion-button (click)="clearStorage()">Clear Storage</ion-button> -->
 
-  <ion-card *ngFor="let card of cards">
+  <ion-card *ngFor="let card of cards; let i = index" (click)="remove(card.id)">
     <ion-card-header>
       <ion-card-title>{{card.shopName}}</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <ion-item>
         <ion-label slot="start">
-          <strong>{{card.shopLocalization}}</strong><br />
-          <ion-text>{{card.modified}}</ion-text>
+          <strong>{{card.barcode.displayValue}}</strong><br />
+          <ion-text>{{card.shopLocalization}}</ion-text>
         </ion-label>
         <div slot="end">
-          <qr-code slot="end" [value]="card.barcode.displayValue" size="50" errorCorrectionLevel="M"></qr-code>
+          <qr-code slot="end" [value]="card.barcode.displayValue" size="50" errorCorrectionLevel="M" ></qr-code>
         </div>
+        <ion-icon name="close-outline" slot="end" (click)="remove(i)"></ion-icon>
+<!--        <ion-fab>-->
+<!--          <ion-fab-button size="small" >-->
+<!--            <ion-icon name="close-outline"></ion-icon>-->
+<!--          </ion-fab-button>-->
+<!--        </ion-fab>-->
       </ion-item>
+      <ion-icon></ion-icon>
     </ion-card-content>
   </ion-card>
 
@@ -41,10 +49,11 @@
       <ion-fab-button aria-label="Skanuj kartę">
         <ion-icon name="barcode-outline" (click)="startScan()"></ion-icon>
       </ion-fab-button>
-      <ion-fab-button aria-label="Zczytaj ze zdjęcia">
+      <ion-fab-button aria-label="Skanuj ze zdjęcia">
         <ion-icon name="image-outline" (click)="readBarcodeFromImage()"></ion-icon>
       </ion-fab-button>
     </ion-fab-list>
   </ion-fab>
+
 
 </ion-content>

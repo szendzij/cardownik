@@ -8,7 +8,8 @@ import { AppComponent } from './app.component';
 import { QrCodeModule } from 'ng-qrcode';
 import { BarcodeScanningModalComponentModule } from './barcode-scanning-modal/barcode-scaning-modal-module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { GlobalErrorHandlerService } from './core/services/global-error-handler/global-error-handler.service';
+import { GlobalErrorHandlerService } from './core';
+import { AddCardsFormComponentModule } from "./add-cards-form/add-cards-form-component.module";
 
 @NgModule({
   declarations: [AppComponent],
@@ -18,6 +19,7 @@ import { GlobalErrorHandlerService } from './core/services/global-error-handler/
     AppRoutingModule,
     QrCodeModule,
     BarcodeScanningModalComponentModule,
+    AddCardsFormComponentModule,
     IonicStorageModule.forRoot(),
     FormsModule,
     ReactiveFormsModule],

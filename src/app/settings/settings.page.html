@@ -7,13 +7,13 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-list-header color="primary">Wygląd</ion-list-header>
+  <ion-list-header><h3>Wygląd</h3></ion-list-header>
   <ion-list>
     <ion-item>
       <ion-toggle [checked]="darkMode" (ionChange)="toggleDarkMode()" justify="space-between">Tryb ciemny</ion-toggle>
     </ion-item>
   </ion-list>
-  <ion-list-header color="primary">Ustawienia aparatu</ion-list-header>
+  <ion-list-header><h3>Ustawienia aparatu</h3></ion-list-header>
   <ion-list>
     <form [formGroup]="formGroup">
       <ion-item>
@@ -57,18 +57,18 @@
       </ion-item>
     </form>
   </ion-list>
-  <ion-list-header color="primary">Uprawnienia</ion-list-header>
+  <ion-list-header><h3>Uprawnienia</h3></ion-list-header>
   <ion-list>
     <ion-item>
       <ion-text>Zapytaj ponownie o uprawnienia do używania aparatu</ion-text>
       <ion-button expand="block" (click)="requestPermissions()" [disabled]="isPermissionGranted">Odpytaj</ion-button>
     </ion-item>
   </ion-list>
-  <ion-list-header color="primary">Przejdź do ustawień telefonu</ion-list-header>
+  <ion-list-header><h3>Ustawienia Android</h3></ion-list-header>
   <ion-list>
     <ion-item>
       <ion-text>Przejdź do ustawień aplikacji w ustawieniach android</ion-text>
-      <ion-button expand="block"  [disabled]="!isSupported">Otwórz ustawienia</ion-button>
+      <ion-button expand="block" (click)="openSettings()" [disabled]="!isSupported">Otwórz ustawienia</ion-button>
 
     </ion-item>
   </ion-list>

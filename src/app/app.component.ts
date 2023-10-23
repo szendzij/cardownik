@@ -16,13 +16,13 @@ export class AppComponent implements OnInit {
     this.backButtonEvent();
   }
   async ngOnInit(): Promise<void> {
-    this.appStorageService.init();
+    await this.appStorageService.init();
   }
 
 
   backButtonEvent() {
     this.platform.backButton.subscribeWithPriority(10, () => {
-      this.backButtonAlert();
+      this.backButtonAlert().then(r => r);
     });
   }
 
