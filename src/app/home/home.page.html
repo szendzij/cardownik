@@ -12,11 +12,12 @@
   <!-- <ion-toast trigger="open-toast" message="This toast will disappear after 5 seconds" [duration]="5000"></ion-toast> -->
 
   <ion-button (click)="getValue()">Get value</ion-button>
-  <ion-button (click)="removeValue()">Remove value</ion-button>
+  <!--  <ion-button (click)="removeValue()">Remove value</ion-button>-->
   <ion-button (click)="showAddCardForm()">showAddCardForm</ion-button>
   <!-- <ion-button (click)="clearStorage()">Clear Storage</ion-button> -->
 
-  <ion-card *ngFor="let card of cards; let i = index" (click)="remove(card.id)">
+  <ion-card *ngFor="let card of cards">
+    <ion-icon name="close-outline" (click)="remove(card.id)"></ion-icon>
     <ion-card-header>
       <ion-card-title>{{card.shopName}}</ion-card-title>
     </ion-card-header>
@@ -27,14 +28,8 @@
           <ion-text>{{card.shopLocalization}}</ion-text>
         </ion-label>
         <div slot="end">
-          <qr-code slot="end" [value]="card.barcode.displayValue" size="50" errorCorrectionLevel="M" ></qr-code>
+          <qr-code slot="end" [value]="card.barcode.displayValue" size="50" errorCorrectionLevel="M"></qr-code>
         </div>
-        <ion-icon name="close-outline" slot="end" (click)="remove(i)"></ion-icon>
-<!--        <ion-fab>-->
-<!--          <ion-fab-button size="small" >-->
-<!--            <ion-icon name="close-outline"></ion-icon>-->
-<!--          </ion-fab-button>-->
-<!--        </ion-fab>-->
       </ion-item>
       <ion-icon></ion-icon>
     </ion-card-content>
