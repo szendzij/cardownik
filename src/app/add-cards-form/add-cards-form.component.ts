@@ -11,12 +11,12 @@ import {AppStorageService} from "../core/services/app-storage/app-storage.servic
   styleUrls: ['./add-cards-form.component.scss'],
 })
 export class AddCardsFormComponent implements OnInit {
-  public barcodes: Barcode[] = [];
+  public barcode: string = '';
 
 
   public card = new FormGroup({
     shopName: new FormControl('', Validators.required),
-    barcode: new FormControl(this.barcodes),
+    barcode: new FormControl(''),
     shopLocalization: new FormControl('', Validators.required),
     modified: new FormControl(new Date().toLocaleString("pl-PL"))
   });
@@ -27,8 +27,8 @@ export class AddCardsFormComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.barcodes = await this.appStorageService.get('barcode_displayValue');
-    this.card.patchValue({barcode: this.barcodes})
+    this.barcode = await this.appStorageService.get('barcodeVal');
+    this.card.patchValue({barcode: this.barcode});
   }
 
 

@@ -24,16 +24,20 @@
     <ion-card-content>
       <ion-item>
         <ion-label slot="start">
-          <strong>Wartość barcodu: {{card.barcode.displayValue|| ''}}</strong><br />
+          <strong>Wartość barcodu: {{card.barcode|| ''}}</strong><br />
           <ion-text>Lokalizacja sklepu: {{card.shopLocalization}}</ion-text>
         </ion-label>
         <div slot="end" (click)="openCard(card.id)">
-          <qr-code slot="end" [value]="card.barcode.displayValue || ''" size="50" errorCorrectionLevel="M"></qr-code>
+          <qr-code slot="end" [value]="card.barcode" size="50" errorCorrectionLevel="M"></qr-code>
         </div>
       </ion-item>
       <ion-icon></ion-icon>
     </ion-card-content>
+    <ion-thumbnail>
+      <qr-code slot="end" [value]="card.barcode || 'fdsfsdf'" size="50" errorCorrectionLevel="M"></qr-code>
+    </ion-thumbnail>
   </ion-card>
+
 
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">
     <ion-fab-button size="small">

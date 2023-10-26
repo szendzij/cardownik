@@ -23,7 +23,7 @@
             </ion-item>
             <ion-item>
               <ion-label position="floating">Treść kodu kreskowego / barcodu</ion-label>
-              <ion-input type="text" formControlName="barcode" [disabled]="true"></ion-input>
+              <ion-input type="text" formControlName="barcode"></ion-input>
             </ion-item>
             <ion-item>
               <ion-label position="floating">Lokalizacja sklepu</ion-label>
@@ -34,9 +34,4 @@
       <ion-button (click)="confirm()" [strong]="true">Zapisz</ion-button>
     </form>
   </ion-card>
-<!--  <ion-item>-->
-<!--    <ion-input labelPlacement="stacked" label="Enter your name" [(ngModel)]="name" placeholder="Your name"></ion-input>-->
-<!--  </ion-item>-->
-<!--  <ion-button color="medium" (click)="cancel()">Anuluj</ion-button>-->
-<!--  <ion-button (click)="confirm()" [strong]="true">Zapisz</ion-button>-->
 </ion-content>

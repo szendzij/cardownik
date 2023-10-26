@@ -1,13 +1,11 @@
-import {Component, OnInit, NgZone, Input} from '@angular/core';
+import {Component, Input, NgZone, OnInit} from '@angular/core';
 import {DialogService} from '../core';
 import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {Barcode, BarcodeFormat, BarcodeScanner, BarcodeValueType, LensFacing} from '@capacitor-mlkit/barcode-scanning';
 import {FilePicker} from '@capawesome/capacitor-file-picker';
-import {BarcodeScanningModalComponent} from '../barcode-scanning-modal/barcode-scanning-modal.component';
 import {AppStorageService} from '../core/services/app-storage/app-storage.service';
 import {Card} from "../core/interface/card";
 import {AddCardsFormComponent} from "../add-cards-form/add-cards-form.component";
-import {ModalController} from "@ionic/angular";
 
 
 @Component({
@@ -20,8 +18,7 @@ export class HomePage implements OnInit {
   public isPermissionGranted = false;
 
   message = 'This modal example uses triggers to automatically open a modal when the button is clicked.';
-  @Input()
-  public barcodes: Barcode[] = [];
+  public barcode: string = '';
 
   public map: Map<string, any> = new Map();
 
@@ -88,7 +85,7 @@ export class HomePage implements OnInit {
   };
 
   showBarodeArray() {
-    alert(this.barcodes)
+    console.log(`saddasd ${this.barcode}`)
   }
 
   async openCard(i: any) {
@@ -151,9 +148,8 @@ export class HomePage implements OnInit {
     const {barcodes} = await BarcodeScanner.readBarcodesFromImage({
       path,
     });
-    // this.barcodes.push(...barcodes);
-    this.barcodes = barcodes;
-    await this.appStorageService.set('barcode_displayValue', this.barcodes[0].displayValue);
+    this.barcode = barcodes[0].displayValue;
+    await this.appStorageService.set('barcodeVal', this.barcode);
     await this.showAddCardForm();
   }
 
@@ -162,8 +158,8 @@ export class HomePage implements OnInit {
     const { barcodes } = await BarcodeScanner.scan({
       formats,
     });
-    this.barcodes = barcodes;
-    await this.appStorageService.set('barcode_displayValue', this.barcodes[0].displayValue);
+    this.barcode = barcodes[0].displayValue;
+    await this.appStorageService.set('barcodeVal', this.barcode);
     await this.showAddCardForm();
   }
 
@@ -172,34 +168,19 @@ export class HomePage implements OnInit {
       component: AddCardsFormComponent
     })
     const { data, role } = await formElement.onWillDismiss();
-
     if(role == 'confirm') {
-      this.message = `Hello, ${data.shopName}!`;
-
-
       this.cards.push({
         id: this._id,
         shopName: data.value.shopName,
         shopLocalization: data.value.shopLocalization,
         modified: data.value.modified,
-        barcode: {
-          rawValue: this.barcodes[0].rawValue,
-          valueType: this.barcodes[0].valueType,
-          displayValue: this.barcodes[0].displayValue,
-          format: this.barcodes[0].format,
-          bytes: this.barcodes[0].bytes,
-        }
+        barcode: data.value.barcode
       })
-
       this._id++;
       await this.appStorageService.set('id', this._id);
       await this.appStorageService.set('my-cards', this.cards);
 
-
     }
-    // formElement.onDidDismiss().then((result) => {
-    //   console.log(result);
-    // })
   }
 
 
