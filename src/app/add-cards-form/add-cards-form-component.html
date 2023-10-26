@@ -1,8 +1,8 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Skanowanie</ion-title>
+    <ion-title>Dodawanie karty</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="closeModal()">
+      <ion-button (click)="cancel()">
         <ion-icon name="close"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -11,7 +11,7 @@
 
 <ion-content class="content-center">
   <ion-card>
-    <form [formGroup]="addCard">
+    <form [formGroup]="card">
 
         <ion-card-header>
           <ion-card-title>Wprowadź dane do formularza</ion-card-title>
@@ -22,16 +22,21 @@
               <ion-input type="text" formControlName="shopName" clearInput required></ion-input>
             </ion-item>
             <ion-item>
-              <ion-label position="floating">Barcode</ion-label>
-              <ion-input type="text" formControlName="barcode" clearInput required></ion-input>
+              <ion-label position="floating">Treść kodu kreskowego / barcodu</ion-label>
+              <ion-input type="text" formControlName="barcode" [disabled]="true"></ion-input>
             </ion-item>
             <ion-item>
               <ion-label position="floating">Lokalizacja sklepu</ion-label>
-              <ion-input type="text" formControlName="shopLocalization" clearInput required></ion-input>
+              <ion-input type="text" formControlName="shopLocalization" clearInput required ></ion-input>
             </ion-item>
           </ion-card-content>
-      <ion-button fill="clear">Action 1</ion-button>
-      <ion-button fill="clear">Action 2</ion-button>
+      <ion-button color="medium" (click)="cancel()">Anuluj</ion-button>
+      <ion-button (click)="confirm()" [strong]="true">Zapisz</ion-button>
     </form>
   </ion-card>
+<!--  <ion-item>-->
+<!--    <ion-input labelPlacement="stacked" label="Enter your name" [(ngModel)]="name" placeholder="Your name"></ion-input>-->
+<!--  </ion-item>-->
+<!--  <ion-button color="medium" (click)="cancel()">Anuluj</ion-button>-->
+<!--  <ion-button (click)="confirm()" [strong]="true">Zapisz</ion-button>-->
 </ion-content>

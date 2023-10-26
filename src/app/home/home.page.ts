@@ -1,12 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { DialogService } from '../core';
-import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { Barcode, BarcodeFormat, BarcodeScanner, BarcodeValueType, LensFacing } from '@capacitor-mlkit/barcode-scanning';
-import { FilePicker } from '@capawesome/capacitor-file-picker';
-import { BarcodeScanningModalComponent } from '../barcode-scanning-modal/barcode-scanning-modal.component';
-import { AppStorageService } from '../core/services/app-storage/app-storage.service';
-import { Card } from "../core/interface/card";
-import { AddCardsFormComponent } from "../add-cards-form/add-cards-form.component";
+import {Component, OnInit, NgZone, Input} from '@angular/core';
+import {DialogService} from '../core';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {Barcode, BarcodeFormat, BarcodeScanner, BarcodeValueType, LensFacing} from '@capacitor-mlkit/barcode-scanning';
+import {FilePicker} from '@capawesome/capacitor-file-picker';
+import {BarcodeScanningModalComponent} from '../barcode-scanning-modal/barcode-scanning-modal.component';
+import {AppStorageService} from '../core/services/app-storage/app-storage.service';
+import {Card} from "../core/interface/card";
+import {AddCardsFormComponent} from "../add-cards-form/add-cards-form.component";
+import {ModalController} from "@ionic/angular";
+
 
 @Component({
   selector: 'app-Home',
@@ -14,6 +16,13 @@ import { AddCardsFormComponent } from "../add-cards-form/add-cards-form.componen
   styleUrls: ['home.page.scss']
 })
 export class HomePage implements OnInit {
+  public isSupportedDevice = false;
+  public isPermissionGranted = false;
+
+  message = 'This modal example uses triggers to automatically open a modal when the button is clicked.';
+  @Input()
+  public barcodes: Barcode[] = [];
+
   public map: Map<string, any> = new Map();
 
   public cards: Card[] = [];
@@ -21,32 +30,53 @@ export class HomePage implements OnInit {
 
   public readonly barcodeFormat = BarcodeFormat;
   public readonly lensFacing = LensFacing;
-  public barcodes: Barcode[] = [];
   public isSupported = false;
-  public isPermissionGranted = false;
 
   public formGroup = new UntypedFormGroup({
     formats: new UntypedFormControl([]),
-    lensFacing: new UntypedFormControl(LensFacing.Back),
   });
-
 
 
   constructor(
     private appStorageService: AppStorageService,
-    private dialogService: DialogService) {
+    private dialogService: DialogService,
+    private readonly ngZone: NgZone) {
   }
 
   async ngOnInit() {
     if (await this.appStorageService.get('my-cards') != null) {
       this.cards = await this.appStorageService.get('my-cards');
+      this._id = await this.appStorageService.get('id');
     }
-    // BarcodeScanner.isSupported().then((result) => {
-    //   this.isSupported = result.supported;
-    // });
-    // BarcodeScanner.checkPermissions().then((result) => {
-    //   this.isPermissionGranted = result.camera === 'granted';
-    // });
+    if(!this.isSupportedDevice) {
+      BarcodeScanner.isSupported().then((result) => {
+        this.isSupportedDevice = result.supported;
+      });
+    }
+    await this.appStorageService.set('supportedDevice', this.isSupportedDevice).then(r => r);
+
+    if(!this.isPermissionGranted) {
+      BarcodeScanner.checkPermissions().then((result) => {
+        this.isPermissionGranted = result.camera === 'granted';
+      });
+    }
+    await this.appStorageService.set('permissionGranted', this.isPermissionGranted).then(r => r);
+
+    BarcodeScanner.removeAllListeners().then(() => {
+      BarcodeScanner.addListener(
+          'googleBarcodeScannerModuleInstallProgress',
+          (event) => {
+            this.ngZone.run(() => {
+              console.log('googleBarcodeScannerModuleInstallProgress', event);
+              const { state, progress } = event;
+              this.formGroup.patchValue({
+                googleBarcodeScannerModuleInstallState: state,
+                googleBarcodeScannerModuleInstallProgress: progress,
+              });
+            });
+          }
+      );
+    });
   }
 
 
@@ -57,37 +87,17 @@ export class HomePage implements OnInit {
     await this.appStorageService.set('my-cards', this.cards);
   };
 
-
-  async setValue() {
-    this.cards.push({
-      id: this._id,
-      shopName: `dasdasdasd ${Date.now()}`,
-      shopLocalization: 'pcim',
-      modified: new Date().toLocaleString("pl-PL"),
-      barcode: {
-        rawValue: '',
-        valueType: BarcodeValueType.Unknown,
-        displayValue: 'adam',
-        format: BarcodeFormat.Aztec,
-        bytes: [33, 263],
-      }
-    })
-
-    this._id++;
-    await this.appStorageService.set('my-cards', this.cards);
-    await this.appStorageService.set('id', this._id);
-    const objReturn = await this.appStorageService.get('my-cards');
-    console.log(objReturn);
-
+  showBarodeArray() {
+    alert(this.barcodes)
   }
 
-  async getValue() {
+  async openCard(i: any) {
     const arrayOfCards = await this.appStorageService.get('my-cards');
-    const val: Card = arrayOfCards.find((v: { id: number; }) => v.id === 1)
+    const val: Card = arrayOfCards.find((v: { id: number; }) => v.id === i)
     if (val) {
-      console.log(val.shopName); // "Alice"
+      console.log(`shop found with ID ${i}`);
     } else {
-      console.log("No shop found with ID 1");
+      console.log(`No shop found with ID ${i}`);
     }
   }
 
@@ -109,40 +119,51 @@ export class HomePage implements OnInit {
   //   await this.appStorageService.set('my-map', map);
   // }
 
-  public async startScan(): Promise<void> {
-    const formats = this.formGroup.get('formats')?.value || [];
-    const lensFacing =
-      this.formGroup.get('lensFacing')?.value || LensFacing.Back;
-    const element = await this.dialogService.showModal({
-      component: BarcodeScanningModalComponent,
-      cssClass: 'barcode-scanning-modal',
-      showBackdrop: false,
-      componentProps: {
-        formats: formats,
-        lensFacing: lensFacing,
-      },
-    });
-    element.onDidDismiss().then((result) => {
-      const barcode: Barcode | undefined = result.data?.barcode;
-      if (barcode) {
-        this.barcodes.push(barcode);
-      }
-    });
-    await this.showAddCardForm();
-  }
+  // public async startScan(): Promise<void> {
+  //   const formats = this.formGroup.get('formats')?.value || [];
+  //   const lensFacing =
+  //     this.formGroup.get('lensFacing')?.value || LensFacing.Back;
+  //   const element = await this.dialogService.showModal({
+  //     component: BarcodeScanningModalComponent,
+  //     cssClass: 'barcode-scanning-modal',
+  //     showBackdrop: false,
+  //     componentProps: {
+  //       formats: formats,
+  //       lensFacing: lensFacing,
+  //     },
+  //   });
+  //   element.onDidDismiss().then((result) => {
+  //     const barcode: Barcode | undefined = result.data?.barcode;
+  //     if (barcode) {
+  //       this.barcodes.push(barcode);
+  //     }
+  //   });
+  //   await this.showAddCardForm();
+  // }
 
   public async readBarcodeFromImage(): Promise<void> {
-    const { files } = await FilePicker.pickImages({ multiple: false });
+    const {files} = await FilePicker.pickImages({multiple: false});
     const path = files[0]?.path;
     if (!path) {
       return;
     }
     const formats = this.formGroup.get('formats')?.value || [];
-    const { barcodes } = await BarcodeScanner.readBarcodesFromImage({
-      formats,
+    const {barcodes} = await BarcodeScanner.readBarcodesFromImage({
       path,
     });
-    this.barcodes.push(...barcodes);
+    // this.barcodes.push(...barcodes);
+    this.barcodes = barcodes;
+    await this.appStorageService.set('barcode_displayValue', this.barcodes[0].displayValue);
+    await this.showAddCardForm();
+  }
+
+  public async scan(): Promise<void> {
+    const formats = this.formGroup.get('formats')?.value || [];
+    const { barcodes } = await BarcodeScanner.scan({
+      formats,
+    });
+    this.barcodes = barcodes;
+    await this.appStorageService.set('barcode_displayValue', this.barcodes[0].displayValue);
     await this.showAddCardForm();
   }
 
@@ -150,9 +171,36 @@ export class HomePage implements OnInit {
     const formElement = await this.dialogService.showModal({
       component: AddCardsFormComponent
     })
-    formElement.onDidDismiss().then((result) => {
-      console.log(result);
-    })
+    const { data, role } = await formElement.onWillDismiss();
+
+    if(role == 'confirm') {
+      this.message = `Hello, ${data.shopName}!`;
+
+
+      this.cards.push({
+        id: this._id,
+        shopName: data.value.shopName,
+        shopLocalization: data.value.shopLocalization,
+        modified: data.value.modified,
+        barcode: {
+          rawValue: this.barcodes[0].rawValue,
+          valueType: this.barcodes[0].valueType,
+          displayValue: this.barcodes[0].displayValue,
+          format: this.barcodes[0].format,
+          bytes: this.barcodes[0].bytes,
+        }
+      })
+
+      this._id++;
+      await this.appStorageService.set('id', this._id);
+      await this.appStorageService.set('my-cards', this.cards);
+
+
+    }
+    // formElement.onDidDismiss().then((result) => {
+    //   console.log(result);
+    // })
   }
+
 
 }

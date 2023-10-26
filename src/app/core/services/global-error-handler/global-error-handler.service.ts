@@ -10,7 +10,7 @@ export class GlobalErrorHandlerService implements ErrorHandler {
   constructor(private injector: Injector) { }
 
   public handleError(error: unknown): void {
-    this.handle(error);
+    this.handle(error).then(r => r);
   }
 
   private async handle(error: unknown): Promise<void> {
@@ -24,7 +24,8 @@ export class GlobalErrorHandlerService implements ErrorHandler {
   }
 
   private getMessageFromUnknownError(error: unknown): string {
-    let message = 'An unknown error has occurred.';
+    console.log(error);
+    let message = 'Wystąpił niespodziewany błąd aplikacji';
     if (error instanceof Object && 'rejection' in error) {
       error = (error as any).rejection;
     }

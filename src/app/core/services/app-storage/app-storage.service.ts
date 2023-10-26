@@ -16,12 +16,6 @@ export class AppStorageService {
     }
   }
 
-  public async incrementID(): Promise<number> {
-      let id: number = await this._storage?.get('id').then(value => value)
-      id++;
-      return this._storage?.set('id', id).then(value => value);
-  }
-
   public async set(key: string, value: any): Promise<void> {
     await this._storage?.set(key, value).then(value => value);
   }

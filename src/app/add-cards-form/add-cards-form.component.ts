@@ -1,6 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {DialogService} from "../core";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {barcode} from "ionicons/icons";
+import {Barcode, BarcodeFormat, BarcodeValueType} from "@capacitor-mlkit/barcode-scanning";
+import {AppStorageService} from "../core/services/app-storage/app-storage.service";
 
 @Component({
   selector: 'add-cards-form-component',
@@ -8,21 +11,33 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
   styleUrls: ['./add-cards-form.component.scss'],
 })
 export class AddCardsFormComponent implements OnInit {
+  public barcodes: Barcode[] = [];
 
-  public addCard = new FormGroup({
-    id: new FormControl(),
+
+  public card = new FormGroup({
     shopName: new FormControl('', Validators.required),
-    barcode: new FormControl(''),
+    barcode: new FormControl(this.barcodes),
     shopLocalization: new FormControl('', Validators.required),
     modified: new FormControl(new Date().toLocaleString("pl-PL"))
   });
 
-  constructor(private readonly dialogService: DialogService) { }
+  constructor(
+    private readonly dialogService: DialogService,
+    private appStorageService: AppStorageService) {
+  }
 
-  ngOnInit(): void { }
+  async ngOnInit() {
+    this.barcodes = await this.appStorageService.get('barcode_displayValue');
+    this.card.patchValue({barcode: this.barcodes})
+  }
 
-  public async closeModal(): Promise<void> {
-    await this.dialogService.dismissModal({});
+
+  cancel() {
+    return this.dialogService.dismissModal(null, 'cancel');
+  }
+
+  confirm() {
+    return this.dialogService.dismissModal(this.card, 'confirm');
   }
 
 }

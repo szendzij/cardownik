@@ -23,8 +23,8 @@ export class DialogService {
     private popoverCtrl: PopoverController
   ) {}
 
-  public async dismissModal(data?: any): Promise<boolean> {
-    return this.modalCtrl.dismiss(data);
+  public async dismissModal(data?: any, role?: string): Promise<boolean> {
+    return this.modalCtrl.dismiss(data, role);
   }
 
   public async showAlert(opts?: AlertOptions): Promise<HTMLIonAlertElement> {
@@ -37,7 +37,7 @@ export class DialogService {
     opts?: AlertOptions
   ): Promise<HTMLIonAlertElement> {
     const defaultOpts: AlertOptions = {
-      header: 'Error',
+      header: 'Błąd',
       buttons: ['OK'],
     };
     opts = { ...defaultOpts, ...opts };
@@ -62,7 +62,7 @@ export class DialogService {
     opts?: LoadingOptions
   ): Promise<HTMLIonLoadingElement> {
     const defaultOpts: LoadingOptions = {
-      message: 'Please wait...',
+      message: 'Proszę czekać...',
     };
     opts = { ...defaultOpts, ...opts };
     const loading = await this.loadingCtrl.create(opts);

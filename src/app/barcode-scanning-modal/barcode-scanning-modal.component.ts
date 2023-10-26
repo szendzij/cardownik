@@ -43,16 +43,16 @@ export class BarcodeScanningModalComponent
 
   public ngAfterViewInit(): void {
     setTimeout(() => {
-      this.startScan();
+      this.startScan().then(r => r);
     }, 250);
   }
 
   public ngOnDestroy(): void {
-    this.stopScan();
+    this.stopScan().then(r => r);
   }
 
   public async closeModal(barcode?: Barcode): Promise<void> {
-    this.dialogService.dismissModal({
+    await this.dialogService.dismissModal({
       barcode: barcode,
     });
   }
@@ -62,7 +62,6 @@ export class BarcodeScanningModalComponent
   }
 
   private async startScan(): Promise<void> {
-    // Hide everything behind the modal (see `src/theme/variables.scss`)
     document.querySelector('body')?.classList.add('barcode-scanning-active');
 
     const options: StartScanOptions = {
@@ -116,14 +115,13 @@ export class BarcodeScanningModalComponent
           }
         }
         await listener.remove();
-        this.closeModal(result.barcode);
+        await this.closeModal(result.barcode);
       }
     );
     await BarcodeScanner.startScan(options);
   }
 
   private async stopScan(): Promise<void> {
-    // Show everything behind the modal again
     document.querySelector('body')?.classList.remove('barcode-scanning-active');
 
     await BarcodeScanner.stopScan();

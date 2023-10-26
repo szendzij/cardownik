@@ -9,21 +9,15 @@ import { FormGroup, FormControl } from '@angular/forms';
   styleUrls: ['settings.page.scss']
 })
 export class SettingsPage implements OnInit {
-
   public darkMode?: boolean;
-
-  public isSupported = false;
+  public isSupportedDevice = false;
   public isPermissionGranted = false;
-
-  public readonly barcodeFormat = BarcodeFormat;
-  public readonly lensFacing = LensFacing;
-
   private barcodeFormatValues: string = "";
-  private lensFacingValue: LensFacing | undefined;
+  public readonly barcodeFormat = BarcodeFormat;
+
 
   public formGroup = new FormGroup({
     formats: new FormControl(),
-    lensFacing: new FormControl(LensFacing.Back),
   });
 
   constructor(private appStorageService: AppStorageService) { }
@@ -31,18 +25,21 @@ export class SettingsPage implements OnInit {
   async ngOnInit(): Promise<void> {
     this.darkMode = await this.appStorageService.get('darkModeActivated');
     this.barcodeFormatValues = await this.appStorageService.get('barcodeFormats');
-    this.lensFacingValue = await this.appStorageService.get('lensFacing');
-
     this.formGroup.patchValue({formats: this.barcodeFormatValues})
-    this.formGroup.patchValue({lensFacing: this.lensFacingValue})
 
-    BarcodeScanner.isSupported().then((result) => {
-      this.isSupported = result.supported;
-    });
-    BarcodeScanner.checkPermissions().then((result) => {
-      this.isPermissionGranted = result.camera === 'granted';
-    });
+    this.isSupportedDevice = await this.appStorageService.get('supportedDevice')
+    if(!this.isSupportedDevice) {
+      BarcodeScanner.isSupported().then((result) => {
+        this.isSupportedDevice = result.supported;
+      });
+    }
 
+    this.isSupportedDevice = await this.appStorageService.get('permissionGranted')
+    if(!this.isPermissionGranted) {
+      BarcodeScanner.checkPermissions().then((result) => {
+        this.isPermissionGranted = result.camera === 'granted';
+      });
+    }
   }
 
   toggleDarkMode() {
@@ -55,12 +52,12 @@ export class SettingsPage implements OnInit {
     }
   }
 
-  saveBarcodeFormats(e:any) {
-    this.appStorageService.set('barcodeFormats', e.detail.value).then(r => r);
+  async installGoogleBarcodeScannerModule(): Promise<void> {
+    await BarcodeScanner.installGoogleBarcodeScannerModule();
   }
 
-  saveLensFacing(e:any) {
-    this.appStorageService.set('lensFacing', e.detail.value).then(r => r);
+  saveBarcodeFormats(e:any) {
+    this.appStorageService.set('barcodeFormats', e.detail.value).then(r => r);
   }
 
   async openSettings(): Promise<void> {

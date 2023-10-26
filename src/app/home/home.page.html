@@ -8,44 +8,43 @@
 
 <ion-content [fullscreen]="true">
 
-  <ion-button (click)="setValue()">Set value</ion-button>
+<!--  <ion-button (click)="setValue()">Set value</ion-button>-->
   <!-- <ion-toast trigger="open-toast" message="This toast will disappear after 5 seconds" [duration]="5000"></ion-toast> -->
 
-  <ion-button (click)="getValue()">Get value</ion-button>
+<!--  <ion-button (click)="getValue()">Get value</ion-button>-->
   <!--  <ion-button (click)="removeValue()">Remove value</ion-button>-->
-  <ion-button (click)="showAddCardForm()">showAddCardForm</ion-button>
-  <!-- <ion-button (click)="clearStorage()">Clear Storage</ion-button> -->
+  <ion-button (click)="showAddCardForm()">Add Card Form</ion-button>
+  <ion-button (click)="showBarodeArray()">show Barode Array in ALERT</ion-button>
 
   <ion-card *ngFor="let card of cards">
     <ion-icon name="close-outline" (click)="remove(card.id)"></ion-icon>
     <ion-card-header>
-      <ion-card-title>{{card.shopName}}</ion-card-title>
+      <ion-card-title>Nazwa sklepu: {{card.shopName}}</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <ion-item>
         <ion-label slot="start">
-          <strong>{{card.barcode.displayValue}}</strong><br />
-          <ion-text>{{card.shopLocalization}}</ion-text>
+          <strong>Wartość barcodu: {{card.barcode.displayValue|| ''}}</strong><br />
+          <ion-text>Lokalizacja sklepu: {{card.shopLocalization}}</ion-text>
         </ion-label>
-        <div slot="end">
-          <qr-code slot="end" [value]="card.barcode.displayValue" size="50" errorCorrectionLevel="M"></qr-code>
+        <div slot="end" (click)="openCard(card.id)">
+          <qr-code slot="end" [value]="card.barcode.displayValue || ''" size="50" errorCorrectionLevel="M"></qr-code>
         </div>
       </ion-item>
       <ion-icon></ion-icon>
     </ion-card-content>
   </ion-card>
 
-
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">
     <ion-fab-button size="small">
       <ion-icon name="chevron-up-circle"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="top">
-      <ion-fab-button aria-label="Skanuj kartę">
-        <ion-icon name="barcode-outline" (click)="startScan()"></ion-icon>
+      <ion-fab-button aria-label="Skanuj kartę" (click)="scan()">
+        <ion-icon name="barcode-outline"></ion-icon>
       </ion-fab-button>
-      <ion-fab-button aria-label="Skanuj ze zdjęcia">
-        <ion-icon name="image-outline" (click)="readBarcodeFromImage()"></ion-icon>
+      <ion-fab-button aria-label="Skanuj ze zdjęcia" (click)="readBarcodeFromImage()">
+        <ion-icon name="image-outline"></ion-icon>
       </ion-fab-button>
     </ion-fab-list>
   </ion-fab>
