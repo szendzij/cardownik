@@ -20,13 +20,9 @@ export class HomePage implements OnInit {
   message = 'This modal example uses triggers to automatically open a modal when the button is clicked.';
   public barcode: string = '';
 
-  public map: Map<string, any> = new Map();
-
   public cards: Card[] = [];
   public _id: number = 0;
 
-  public readonly barcodeFormat = BarcodeFormat;
-  public readonly lensFacing = LensFacing;
   public isSupported = false;
 
   public formGroup = new UntypedFormGroup({
@@ -144,9 +140,10 @@ export class HomePage implements OnInit {
     if (!path) {
       return;
     }
-    const formats = this.formGroup.get('formats')?.value || [];
+    const formats = await this.appStorageService.get('barcodeFormats');
     const {barcodes} = await BarcodeScanner.readBarcodesFromImage({
       path,
+      formats
     });
     this.barcode = barcodes[0].displayValue;
     await this.appStorageService.set('barcodeVal', this.barcode);
@@ -154,7 +151,7 @@ export class HomePage implements OnInit {
   }
 
   public async scan(): Promise<void> {
-    const formats = this.formGroup.get('formats')?.value || [];
+    const formats = await this.appStorageService.get('barcodeFormats');
     const { barcodes } = await BarcodeScanner.scan({
       formats,
     });

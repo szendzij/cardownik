@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { HomePage } from './home.page';
 import { ExploreContainerComponentModule } from '../explore-container/explore-container.module';
 import { HomePageRoutingModule } from './home-routing.module';
-import { QrCodeModule } from 'ng-qrcode';
+import {QRCodeModule} from "angularx-qrcode";
 
 @NgModule({
   imports: [
@@ -14,7 +14,7 @@ import { QrCodeModule } from 'ng-qrcode';
     FormsModule,
     ExploreContainerComponentModule,
     HomePageRoutingModule,
-    QrCodeModule
+    QRCodeModule
   ],
   declarations: [HomePage]
 })

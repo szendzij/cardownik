@@ -27,15 +27,26 @@
           <strong>Wartość barcodu: {{card.barcode|| ''}}</strong><br />
           <ion-text>Lokalizacja sklepu: {{card.shopLocalization}}</ion-text>
         </ion-label>
-        <div slot="end" (click)="openCard(card.id)">
-          <qr-code slot="end" [value]="card.barcode" size="50" errorCorrectionLevel="M"></qr-code>
+<!--        <div slot="end" (click)="openCard(card.id)">-->
+<!--          <qr-code slot="end" [value]="card.barcode" size="50" errorCorrectionLevel="M"></qr-code>-->
+<!--        </div>-->
+        <div class="qrcodeImage" (click)="openCard(card.id)">
+          <qrcode
+            [qrdata]="card.barcode"
+            [allowEmptyString]="true"
+            [cssClass]="'demoBorderRadius'"
+            [colorDark]="'#000000ff'"
+            [colorLight]="'#ffffffff'"
+            [elementType]="'svg'"
+            [errorCorrectionLevel]="'M'"
+            [margin]="10"
+            [title]="'A custom title attribute'"
+            [width]="50"
+          ></qrcode>
         </div>
       </ion-item>
       <ion-icon></ion-icon>
     </ion-card-content>
-    <ion-thumbnail>
-      <qr-code slot="end" [value]="card.barcode || 'fdsfsdf'" size="50" errorCorrectionLevel="M"></qr-code>
-    </ion-thumbnail>
   </ion-card>
 
 

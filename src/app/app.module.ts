@@ -5,11 +5,10 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { IonicStorageModule } from '@ionic/storage-angular';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { QrCodeModule } from 'ng-qrcode';
-import { BarcodeScanningModalComponentModule } from './barcode-scanning-modal/barcode-scaning-modal-module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GlobalErrorHandlerService } from './core';
 import { AddCardsFormComponentModule } from "./add-cards-form/add-cards-form-component.module";
+import {QRCodeModule} from "angularx-qrcode";
 
 @NgModule({
   declarations: [AppComponent],
@@ -17,8 +16,7 @@ import { AddCardsFormComponentModule } from "./add-cards-form/add-cards-form-com
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
-    QrCodeModule,
-    BarcodeScanningModalComponentModule,
+    QRCodeModule,
     AddCardsFormComponentModule,
     IonicStorageModule.forRoot(),
     FormsModule,

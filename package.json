@@ -32,8 +32,8 @@
     "@capawesome/capacitor-file-picker": "^5.1.1",
     "@ionic/angular": "^7.0.0",
     "@ionic/storage-angular": "^4.0.0",
+    "angularx-qrcode": "^16.0.2",
     "ionicons": "^7.0.0",
-    "ng-qrcode": "^16.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.13.0"
