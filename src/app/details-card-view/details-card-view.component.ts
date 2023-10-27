@@ -1,21 +1,24 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {DialogService} from "../core";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {barcode} from "ionicons/icons";
-import {Barcode, BarcodeFormat, BarcodeValueType} from "@capacitor-mlkit/barcode-scanning";
 import {AppStorageService} from "../core/services/app-storage/app-storage.service";
+import {Card} from "../core/interface/card";
+import {card} from "ionicons/icons";
 
 @Component({
-  selector: 'add-cards-form-component',
-  templateUrl: './add-cards-form-component.html',
-  styleUrls: ['./add-cards-form.component.scss'],
+  selector: 'details-card-view-component',
+  templateUrl: './details-card-view-component.html',
+  styleUrls: ['./details-card-view.component.scss'],
 })
-export class AddCardsFormComponent implements OnInit {
+export class DetailsCardViewComponent implements OnInit {
   @Input()
   public barcode: string = '';
 
+  @Input()
+  public card: any;
 
-  public card = new FormGroup({
+
+  public cardForm = new FormGroup({
     shopName: new FormControl('', Validators.required),
     barcode: new FormControl(''),
     shopLocalization: new FormControl('', Validators.required),
@@ -28,7 +31,12 @@ export class AddCardsFormComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.card.patchValue({barcode: this.barcode});
+    console.log(this.card)
+    this.cardForm.patchValue({
+      barcode: this.card.barcode,
+      shopName: this.card.shopName,
+      shopLocalization: this.card.shopLocalization
+    });
   }
 
 
@@ -37,7 +45,7 @@ export class AddCardsFormComponent implements OnInit {
   }
 
   confirm() {
-    return this.dialogService.dismissModal(this.card, 'confirm');
+    return this.dialogService.dismissModal(this.cardForm, 'confirm');
   }
 
 }

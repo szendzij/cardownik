@@ -1,11 +1,13 @@
-import {Component, Input, NgZone, OnInit} from '@angular/core';
+import {Component, NgZone, OnInit} from '@angular/core';
 import {DialogService} from '../core';
 import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {Barcode, BarcodeFormat, BarcodeScanner, BarcodeValueType, LensFacing} from '@capacitor-mlkit/barcode-scanning';
+import {BarcodeScanner} from '@capacitor-mlkit/barcode-scanning';
 import {FilePicker} from '@capawesome/capacitor-file-picker';
 import {AppStorageService} from '../core/services/app-storage/app-storage.service';
 import {Card} from "../core/interface/card";
 import {AddCardsFormComponent} from "../add-cards-form/add-cards-form.component";
+import {DetailsCardViewComponent} from "../details-card-view/details-card-view.component";
+import {Platform} from "@ionic/angular";
 
 
 @Component({
@@ -33,41 +35,43 @@ export class HomePage implements OnInit {
   constructor(
     private appStorageService: AppStorageService,
     private dialogService: DialogService,
-    private readonly ngZone: NgZone) {
+    private readonly ngZone: NgZone,
+    private platform: Platform) {
   }
 
   async ngOnInit() {
+    this.platform.width();
     if (await this.appStorageService.get('my-cards') != null) {
       this.cards = await this.appStorageService.get('my-cards');
       this._id = await this.appStorageService.get('id');
     }
-    if(!this.isSupportedDevice) {
-      BarcodeScanner.isSupported().then((result) => {
-        this.isSupportedDevice = result.supported;
-      });
-    }
-    await this.appStorageService.set('supportedDevice', this.isSupportedDevice).then(r => r);
-
-    if(!this.isPermissionGranted) {
-      BarcodeScanner.checkPermissions().then((result) => {
-        this.isPermissionGranted = result.camera === 'granted';
-      });
-    }
-    await this.appStorageService.set('permissionGranted', this.isPermissionGranted).then(r => r);
+    // if(!this.isSupportedDevice) {
+    //   BarcodeScanner.isSupported().then((result) => {
+    //     this.isSupportedDevice = result.supported;
+    //   });
+    // }
+    // await this.appStorageService.set('supportedDevice', this.isSupportedDevice).then(r => r);
+    //
+    // if(!this.isPermissionGranted) {
+    //   BarcodeScanner.checkPermissions().then((result) => {
+    //     this.isPermissionGranted = result.camera === 'granted';
+    //   });
+    // }
+    // await this.appStorageService.set('permissionGranted', this.isPermissionGranted).then(r => r);
 
     BarcodeScanner.removeAllListeners().then(() => {
       BarcodeScanner.addListener(
-          'googleBarcodeScannerModuleInstallProgress',
-          (event) => {
-            this.ngZone.run(() => {
-              console.log('googleBarcodeScannerModuleInstallProgress', event);
-              const { state, progress } = event;
-              this.formGroup.patchValue({
-                googleBarcodeScannerModuleInstallState: state,
-                googleBarcodeScannerModuleInstallProgress: progress,
-              });
+        'googleBarcodeScannerModuleInstallProgress',
+        (event) => {
+          this.ngZone.run(() => {
+            console.log('googleBarcodeScannerModuleInstallProgress', event);
+            const {state, progress} = event;
+            this.formGroup.patchValue({
+              googleBarcodeScannerModuleInstallState: state,
+              googleBarcodeScannerModuleInstallProgress: progress,
             });
-          }
+          });
+        }
       );
     });
   }
@@ -79,60 +83,6 @@ export class HomePage implements OnInit {
     this.cards = arrayOfCards.filter((e: any) => e != val);
     await this.appStorageService.set('my-cards', this.cards);
   };
-
-  showBarodeArray() {
-    console.log(`saddasd ${this.barcode}`)
-  }
-
-  async openCard(i: any) {
-    const arrayOfCards = await this.appStorageService.get('my-cards');
-    const val: Card = arrayOfCards.find((v: { id: number; }) => v.id === i)
-    if (val) {
-      console.log(`shop found with ID ${i}`);
-    } else {
-      console.log(`No shop found with ID ${i}`);
-    }
-  }
-
-  // async updateCard(key: string, card: Card) {
-  //   // Get the map from local storage.
-  //   const map = await this.appStorageService.get('my-map');
-  //
-  //   // Get the card from the map.
-  //   const cardToUpdate: Card = map.get(key);
-  //
-  //   // Update the values of the card.
-  //   cardToUpdate.shopName = card.shopName;
-  //   cardToUpdate.barcode = card.barcode;
-  //   cardToUpdate.shopLocalization = card.shopLocalization;
-  //   cardToUpdate.modified = card.modified;
-  //
-  //   map.set(key, cardToUpdate);
-  //
-  //   await this.appStorageService.set('my-map', map);
-  // }
-
-  // public async startScan(): Promise<void> {
-  //   const formats = this.formGroup.get('formats')?.value || [];
-  //   const lensFacing =
-  //     this.formGroup.get('lensFacing')?.value || LensFacing.Back;
-  //   const element = await this.dialogService.showModal({
-  //     component: BarcodeScanningModalComponent,
-  //     cssClass: 'barcode-scanning-modal',
-  //     showBackdrop: false,
-  //     componentProps: {
-  //       formats: formats,
-  //       lensFacing: lensFacing,
-  //     },
-  //   });
-  //   element.onDidDismiss().then((result) => {
-  //     const barcode: Barcode | undefined = result.data?.barcode;
-  //     if (barcode) {
-  //       this.barcodes.push(barcode);
-  //     }
-  //   });
-  //   await this.showAddCardForm();
-  // }
 
   public async readBarcodeFromImage(): Promise<void> {
     const {files} = await FilePicker.pickImages({multiple: false});
@@ -152,7 +102,7 @@ export class HomePage implements OnInit {
 
   public async scan(): Promise<void> {
     const formats = await this.appStorageService.get('barcodeFormats');
-    const { barcodes } = await BarcodeScanner.scan({
+    const {barcodes} = await BarcodeScanner.scan({
       formats,
     });
     this.barcode = barcodes[0].displayValue;
@@ -162,10 +112,11 @@ export class HomePage implements OnInit {
 
   async showAddCardForm() {
     const formElement = await this.dialogService.showModal({
-      component: AddCardsFormComponent
+      component: AddCardsFormComponent,
+      componentProps: {barcode: this.barcode}
     })
-    const { data, role } = await formElement.onWillDismiss();
-    if(role == 'confirm') {
+    const {data, role} = await formElement.onWillDismiss();
+    if (role == 'confirm') {
       this.cards.push({
         id: this._id,
         shopName: data.value.shopName,
@@ -178,6 +129,41 @@ export class HomePage implements OnInit {
       await this.appStorageService.set('my-cards', this.cards);
 
     }
+  }
+
+  //
+  // async openCard(i: any) {
+  //   const arrayOfCards = await this.appStorageService.get('my-cards');
+  //   const val: Card = arrayOfCards.find((v: { id: number; }) => v.id === i)
+  //   if (val) {
+  //     const formElement = await this.dialogService.showModal({
+  //       component: AddCardsFormComponent,
+  //       componentProps: {id: i}
+  //     })
+  //   } else {
+  //     console.log(`No shop found with ID ${i}`);
+  //   }
+  // }
+
+  async openDetailsOfCard(id: any) {
+    const arrayOfCards = await this.appStorageService.get('my-cards');
+    const cardObject: Card = arrayOfCards.find((v: { id: number; }) => v.id === id)
+    console.log(cardObject)
+    if (cardObject) {
+      const formElement = await this.dialogService.showModal({
+        component: DetailsCardViewComponent,
+        componentProps: {card: cardObject}
+      })
+    } else {
+      console.log(`No shop found with ID ${cardObject}`);
+    }
+  }
+
+  async showDetailsView(i: number) {
+    const formElement = await this.dialogService.showModal({
+      component: AddCardsFormComponent,
+      componentProps: {id: i}
+    })
   }
 
 

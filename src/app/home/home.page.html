@@ -8,44 +8,68 @@
 
 <ion-content [fullscreen]="true">
 
-<!--  <ion-button (click)="setValue()">Set value</ion-button>-->
-  <!-- <ion-toast trigger="open-toast" message="This toast will disappear after 5 seconds" [duration]="5000"></ion-toast> -->
-
-<!--  <ion-button (click)="getValue()">Get value</ion-button>-->
-  <!--  <ion-button (click)="removeValue()">Remove value</ion-button>-->
   <ion-button (click)="showAddCardForm()">Add Card Form</ion-button>
-  <ion-button (click)="showBarodeArray()">show Barode Array in ALERT</ion-button>
 
   <ion-card *ngFor="let card of cards">
-    <ion-icon name="close-outline" (click)="remove(card.id)"></ion-icon>
-    <ion-card-header>
-      <ion-card-title>Nazwa sklepu: {{card.shopName}}</ion-card-title>
-    </ion-card-header>
+    <!--    <ion-card-header>-->
+    <!--      <div class="header">-->
+    <!--        <div id="deleteIcon">-->
+    <!--          <ion-icon name="close-circle-outline" (click)="remove(card.id)"></ion-icon>-->
+    <!--        </div>-->
+    <h1 class="ion-margin-horizontal ion-text-capitalize">{{card.shopName}}</h1>
+    <!--      </div>-->
+
+    <!--    </ion-card-header>-->
     <ion-card-content>
-      <ion-item>
-        <ion-label slot="start">
-          <strong>Wartość barcodu: {{card.barcode|| ''}}</strong><br />
-          <ion-text>Lokalizacja sklepu: {{card.shopLocalization}}</ion-text>
-        </ion-label>
-<!--        <div slot="end" (click)="openCard(card.id)">-->
-<!--          <qr-code slot="end" [value]="card.barcode" size="50" errorCorrectionLevel="M"></qr-code>-->
-<!--        </div>-->
-        <div class="qrcodeImage" (click)="openCard(card.id)">
-          <qrcode
-            [qrdata]="card.barcode"
-            [allowEmptyString]="true"
-            [cssClass]="'demoBorderRadius'"
-            [colorDark]="'#000000ff'"
-            [colorLight]="'#ffffffff'"
-            [elementType]="'svg'"
-            [errorCorrectionLevel]="'M'"
-            [margin]="10"
-            [title]="'A custom title attribute'"
-            [width]="50"
-          ></qrcode>
-        </div>
-      </ion-item>
-      <ion-icon></ion-icon>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-row>
+              <ion-label>
+                <h2>Lokalizacja sklepu</h2>
+                <h2 class="ion-text-capitalize">{{card.shopLocalization || ''}}</h2>
+              </ion-label>
+            </ion-row>
+            <br/>
+            <ion-row>
+              <ion-label>
+                <h2>Wartość barcodu</h2>
+                <h2 class="ion-text-capitalize">{{card.barcode || ''}}</h2>
+              </ion-label>
+            </ion-row>
+<!--              <h2 class="ion-text-capitalize">{{card.barcode || ''}}</h2>-->
+<!--              <ion-input label="Nazwa sklepu" labelPlacement="stacked" fill="outline" [disabled]="true" value="{{card.barcode || ''}}"></ion-input>-->
+
+<!--              <ion-input label="Lokalizacja sklepu" labelPlacement="stacked" fill="outline" [disabled]="true" value="{{card.shopLocalization || ''}}"></ion-input>-->
+
+
+<!--              <h2 class="ion-text-capitalize">{{card.shopLocalization}}</h2>-->
+
+          </ion-col>
+          <ion-col class="col-right">
+            <div class="qrcodeImage" (click)="openDetailsOfCard(card.id)">
+              <qrcode
+                [qrdata]="card.barcode || 'dupa'"
+                [allowEmptyString]="true"
+                [cssClass]="'qrcode'"
+                [colorDark]="'#0c0c0c'"
+                [colorLight]="'#ffffff'"
+                [elementType]="'svg'"
+                [errorCorrectionLevel]="'M'"
+                [margin]="2"
+                [width]="75"
+              ></qrcode>
+            </div>
+            <div>
+              click me!
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+
+      <!--      <ion-button class="ion-color-warning" (click)="openDetailsOfCard(card.id)">detailss</ion-button>-->
+
     </ion-card-content>
   </ion-card>
 

@@ -9,6 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GlobalErrorHandlerService } from './core';
 import { AddCardsFormComponentModule } from "./add-cards-form/add-cards-form-component.module";
 import {QRCodeModule} from "angularx-qrcode";
+import {DetailsCardViewComponentModule} from "./details-card-view/details-card-view-component.module";
 
 @NgModule({
   declarations: [AppComponent],
@@ -18,6 +19,7 @@ import {QRCodeModule} from "angularx-qrcode";
     AppRoutingModule,
     QRCodeModule,
     AddCardsFormComponentModule,
+    DetailsCardViewComponentModule,
     IonicStorageModule.forRoot(),
     FormsModule,
     ReactiveFormsModule],
