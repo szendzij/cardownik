@@ -1,37 +1,80 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Dodawanie karty</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="back()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Szczegóły karty</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="cancel()">
-        <ion-icon name="close"></ion-icon>
+      <ion-button (click)="editCard()">
+        <ion-icon name="ellipsis-vertical-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="content-center">
-  <ion-card>
-    <form [formGroup]="cardForm">
+<ion-content [fullscreen]="true" class="content-center ion-padding">
+  <!--  <ion-card>-->
+  <!--    <form [formGroup]="cardForm">-->
 
-        <ion-card-header>
-          <ion-card-title>Wprowadź dane do formularza</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-            <ion-item>
-              <ion-label position="floating">Nazwa sklepu</ion-label>
-              <ion-input type="text" formControlName="shopName" clearInput required></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label position="floating">Treść kodu kreskowego / barcodu</ion-label>
-              <ion-input type="text" formControlName="barcode"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label position="floating">Lokalizacja sklepu</ion-label>
-              <ion-input type="text" formControlName="shopLocalization" clearInput required ></ion-input>
-            </ion-item>
-          </ion-card-content>
-      <ion-button color="medium" (click)="cancel()">Anuluj</ion-button>
-      <ion-button (click)="confirm()" [strong]="true">Zapisz</ion-button>
-    </form>
-  </ion-card>
+  <!--        <ion-card-header>-->
+  <!--          <ion-card-title>Wprowadź dane do formularza</ion-card-title>-->
+  <!--        </ion-card-header>-->
+  <!--        <ion-card-content>-->
+  <!--            <ion-item>-->
+  <!--              <ion-label position="floating">Nazwa sklepu</ion-label>-->
+  <!--              <ion-input type="text" formControlName="shopName" clearInput required></ion-input>-->
+  <!--            </ion-item>-->
+  <!--            <ion-item>-->
+  <!--              <ion-label position="floating">Treść kodu kreskowego / barcodu</ion-label>-->
+  <!--              <ion-input type="text" formControlName="barcode"></ion-input>-->
+  <!--            </ion-item>-->
+  <!--            <ion-item>-->
+  <!--              <ion-label position="floating">Lokalizacja sklepu</ion-label>-->
+  <!--              <ion-input type="text" formControlName="shopLocalization" clearInput required ></ion-input>-->
+  <!--            </ion-item>-->
+  <!--          </ion-card-content>-->
+  <!--      <ion-button color="medium" (click)="cancel()">Anuluj</ion-button>-->
+  <!--      <ion-button (click)="confirm()" [strong]="true">Zapisz</ion-button>-->
+  <!--    </form>-->
+  <!--  </ion-card>-->
+  <ion-list content="full">
+    <ion-grid>
+      <ion-col>
+        <div class="ion-margin-horizontal">
+          <div class="qrcodeImage content-center">
+            <qrcode
+              [qrdata]="this.card.barcode || ''"
+              [allowEmptyString]="true"
+              [cssClass]="'qrcode'"
+              [colorDark]="'#0c0c0c'"
+              [colorLight]="'#ffffff'"
+              [elementType]="'svg'"
+              [errorCorrectionLevel]="'M'"
+              [margin]="2"
+              [width]="this.screenWidth / 1.2"
+            ></qrcode>
+            <ion-text class="ion-margin">
+              <strong>{{this.card.barcode}}</strong>
+            </ion-text>
+          </div>
+        </div>
+        <div class="ion-margin">
+          <h1>
+            <ion-label>
+              <ion-text color="medium">Nazwa sklepu</ion-text>
+            </ion-label>
+            <br/>
+            <ion-text class="ion-text-capitalize">
+              <strong>{{this.card.shopName}}</strong>
+            </ion-text>
+          </h1>
+        </div>
+        <div class="ion-margin">
+
+        </div>
+      </ion-col>
+    </ion-grid>
+  </ion-list>
 </ion-content>
