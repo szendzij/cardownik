@@ -8,29 +8,26 @@ import {Card} from "../core/interface/card";
 import {AddCardsFormComponent} from "../add-cards-form/add-cards-form.component";
 import {DetailsCardViewComponent} from "../details-card-view/details-card-view.component";
 import {Platform} from "@ionic/angular";
+import {Geolocation} from "@capacitor/geolocation";
 
 
 @Component({
-  selector: 'app-Home',
+  selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss']
 })
 export class HomePage implements OnInit {
   public isSupportedDevice = false;
   public isPermissionGranted = false;
-
-  message = 'This modal example uses triggers to automatically open a modal when the button is clicked.';
   public barcode: string = '';
-
   public cards: Card[] = [];
   public _id: number = 0;
-
   public isSupported = false;
-
   public formGroup = new UntypedFormGroup({
     formats: new UntypedFormControl([]),
   });
 
+  coords: any;
 
   constructor(
     private appStorageService: AppStorageService,
@@ -45,19 +42,19 @@ export class HomePage implements OnInit {
       this.cards = await this.appStorageService.get('my-cards');
       this._id = await this.appStorageService.get('id');
     }
-    // if(!this.isSupportedDevice) {
-    //   BarcodeScanner.isSupported().then((result) => {
-    //     this.isSupportedDevice = result.supported;
-    //   });
-    // }
-    // await this.appStorageService.set('supportedDevice', this.isSupportedDevice).then(r => r);
-    //
-    // if(!this.isPermissionGranted) {
-    //   BarcodeScanner.checkPermissions().then((result) => {
-    //     this.isPermissionGranted = result.camera === 'granted';
-    //   });
-    // }
-    // await this.appStorageService.set('permissionGranted', this.isPermissionGranted).then(r => r);
+    if (!this.isSupportedDevice) {
+      BarcodeScanner.isSupported().then((result) => {
+        this.isSupportedDevice = result.supported;
+      });
+    }
+    await this.appStorageService.set('supportedDevice', this.isSupportedDevice).then(r => r);
+
+    if (!this.isPermissionGranted) {
+      BarcodeScanner.checkPermissions().then((result) => {
+        this.isPermissionGranted = result.camera === 'granted';
+      });
+    }
+    await this.appStorageService.set('permissionGranted', this.isPermissionGranted).then(r => r);
 
     BarcodeScanner.removeAllListeners().then(() => {
       BarcodeScanner.addListener(
@@ -74,6 +71,13 @@ export class HomePage implements OnInit {
         }
       );
     });
+  }
+
+  async locate() {
+    const coordinates = await Geolocation.getCurrentPosition();
+    this.coords = coordinates.coords;
+    alert(coordinates);
+    console.log(this.coords)
   }
 
 

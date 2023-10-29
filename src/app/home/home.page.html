@@ -9,17 +9,10 @@
 <ion-content [fullscreen]="true">
 
   <ion-button (click)="showAddCardForm()">Add Card Form</ion-button>
+  <ion-button (click)="locate()">locate</ion-button>
 
   <ion-card *ngFor="let card of cards">
-    <!--    <ion-card-header>-->
-    <!--      <div class="header">-->
-    <!--        <div id="deleteIcon">-->
-    <!--          <ion-icon name="close-circle-outline" (click)="remove(card.id)"></ion-icon>-->
-    <!--        </div>-->
     <h1 class="ion-margin-horizontal ion-text-capitalize">{{card.shopName}}</h1>
-    <!--      </div>-->
-
-    <!--    </ion-card-header>-->
     <ion-card-content>
       <ion-grid>
         <ion-row>
@@ -37,13 +30,13 @@
                 <h2 class="ion-text-capitalize">{{card.barcode || ''}}</h2>
               </ion-label>
             </ion-row>
-<!--              <h2 class="ion-text-capitalize">{{card.barcode || ''}}</h2>-->
-<!--              <ion-input label="Nazwa sklepu" labelPlacement="stacked" fill="outline" [disabled]="true" value="{{card.barcode || ''}}"></ion-input>-->
+            <!--              <h2 class="ion-text-capitalize">{{card.barcode || ''}}</h2>-->
+            <!--              <ion-input label="Nazwa sklepu" labelPlacement="stacked" fill="outline" [disabled]="true" value="{{card.barcode || ''}}"></ion-input>-->
 
-<!--              <ion-input label="Lokalizacja sklepu" labelPlacement="stacked" fill="outline" [disabled]="true" value="{{card.shopLocalization || ''}}"></ion-input>-->
+            <!--              <ion-input label="Lokalizacja sklepu" labelPlacement="stacked" fill="outline" [disabled]="true" value="{{card.shopLocalization || ''}}"></ion-input>-->
 
 
-<!--              <h2 class="ion-text-capitalize">{{card.shopLocalization}}</h2>-->
+            <!--              <h2 class="ion-text-capitalize">{{card.shopLocalization}}</h2>-->
 
           </ion-col>
           <ion-col class="col-right">

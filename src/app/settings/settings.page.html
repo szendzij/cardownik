@@ -25,12 +25,12 @@
     </ion-item-divider>
     <ion-item lines="none">
       <ion-label>
-        <ion-text>Zapytaj ponownie o uprawnienia do używania aparatu</ion-text>
+        <ion-text>Uprawnienia do używania aparatu</ion-text>
         <ion-button
           expand="block"
           class="ion-margin-vertical"
           (click)="requestPermissions()" [disabled]="isPermissionGranted || !isSupportedDevice"
-        >Odpytaj ponownie
+        >{{isPermissionGranted ? 'Uprawnienia już nadano' : 'Nadaj uprawnienia do używania aparatu'}}
         </ion-button>
       </ion-label>
     </ion-item>
@@ -45,11 +45,12 @@
       <ion-label>
         <ion-text>Przejdź do ustawień aplikacji w ustawieniach android</ion-text>
         <ion-button
+          color="{{isSupportedDevice ? 'primary' : 'danger' }}"
           expand="block"
           class="ion-margin-vertical"
           (click)="openSettings()"
-          [disabled]="isPermissionGranted || !isSupportedDevice"
-        >Otwórz ustawienia
+          [disabled]="!isSupportedDevice"
+        >{{ isSupportedDevice ? 'Otwórz ustawienia' : 'Urządzenie nie jest wspierane'}}
         </ion-button>
       </ion-label>
     </ion-item>
@@ -57,11 +58,12 @@
       <ion-label>
         <ion-text>Zainstaluj Google Lens</ion-text>
         <ion-button
+          color="{{isSupportedDevice ? 'primary' : 'danger' }}"
           class="ion-margin-vertical"
           expand="block"
           (click)="installGoogleBarcodeScannerModule()"
           [disabled]="!isSupportedDevice"
-        >Install Google Barcode Scanner Module
+        >{{ isSupportedDevice ? 'Zainstaluj google lens' : 'Urządzenie nie jest wspierane'}}
         </ion-button>
       </ion-label>
     </ion-item>
@@ -72,17 +74,15 @@
         </ion-item>
         <div class="ion-padding" slot="content">
           <form [formGroup]="formGroup">
-            <ion-label>
-              <ion-text lines="full">Formaty kodów kreskowych</ion-text>
               <ion-select
                 (ionChange)="saveBarcodeFormats($event)"
+                label="Formaty kodów kreskowych"
+                label-placement="floating"
+                fill="outline"
                 multiple="true"
-                placeholder="Wszystkie"
                 formControlName="formats"
-                slot="end"
                 okText="Zapisz"
                 cancelText="Anuluj"
-                fill="outline"
                 class="ion-margin-vertical"
               >
                 <ion-select-option [value]="barcodeFormat.Aztec">Aztec</ion-select-option>
@@ -99,27 +99,9 @@
                 <ion-select-option [value]="barcodeFormat.UpcA">UpcA</ion-select-option>
                 <ion-select-option [value]="barcodeFormat.UpcE">UpcE</ion-select-option>
               </ion-select>
-            </ion-label>
           </form>
         </div>
       </ion-accordion>
     </ion-accordion-group>
   </ion-item-group>
-
-<!--  <ion-accordion-group>-->
-<!--    <ion-accordion value="first">-->
-<!--      <ion-item slot="header" color="light">-->
-<!--        <ion-label>Zaawansowane ustawienia</ion-label>-->
-<!--      </ion-item>-->
-<!--      <div class="ion-padding" slot="content">-->
-
-<!--      </div>-->
-<!--    </ion-accordion>-->
-<!--  </ion-accordion-group>-->
-
-<!--  <ion-list-header><h3>Ustawienia skanowanych kodów</h3></ion-list-header>-->
-<!--  <ion-list>-->
-
-<!--  </ion-list>-->
-
 </ion-content>
