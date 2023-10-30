@@ -6,39 +6,23 @@
       </ion-button>
     </ion-buttons>
     <ion-title>Szczegóły karty</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="editCard()">
-        <ion-icon name="ellipsis-vertical-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="content-center ion-padding">
-  <!--  <ion-card>-->
-  <!--    <form [formGroup]="cardForm">-->
-
-  <!--        <ion-card-header>-->
-  <!--          <ion-card-title>Wprowadź dane do formularza</ion-card-title>-->
-  <!--        </ion-card-header>-->
-  <!--        <ion-card-content>-->
-  <!--            <ion-item>-->
-  <!--              <ion-label position="floating">Nazwa sklepu</ion-label>-->
-  <!--              <ion-input type="text" formControlName="shopName" clearInput required></ion-input>-->
-  <!--            </ion-item>-->
-  <!--            <ion-item>-->
-  <!--              <ion-label position="floating">Treść kodu kreskowego / barcodu</ion-label>-->
-  <!--              <ion-input type="text" formControlName="barcode"></ion-input>-->
-  <!--            </ion-item>-->
-  <!--            <ion-item>-->
-  <!--              <ion-label position="floating">Lokalizacja sklepu</ion-label>-->
-  <!--              <ion-input type="text" formControlName="shopLocalization" clearInput required ></ion-input>-->
-  <!--            </ion-item>-->
-  <!--          </ion-card-content>-->
-  <!--      <ion-button color="medium" (click)="cancel()">Anuluj</ion-button>-->
-  <!--      <ion-button (click)="confirm()" [strong]="true">Zapisz</ion-button>-->
-  <!--    </form>-->
-  <!--  </ion-card>-->
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button size="small">
+      <ion-icon name="chevron-up-circle"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button (click)="removeCard()">
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button (click)="editCard()">
+        <ion-icon name="create-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
   <ion-list content="full" class="cardStyle">
     <ion-grid>
       <ion-col>

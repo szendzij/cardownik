@@ -1,7 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { AppStorageService } from '../core/services/app-storage/app-storage.service';
-import { BarcodeFormat, BarcodeScanner, LensFacing } from '@capacitor-mlkit/barcode-scanning';
+import {
+  BarcodeFormat,
+  BarcodeScanner,
+  IsGoogleBarcodeScannerModuleAvailableResult,
+  LensFacing
+} from '@capacitor-mlkit/barcode-scanning';
 import { FormGroup, FormControl } from '@angular/forms';
+import {log} from "@capacitor/assets/dist/util/log";
 
 @Component({
   selector: 'app-settings',
@@ -13,6 +19,7 @@ export class SettingsPage implements OnInit {
   public isSupportedDevice = false;
   public isPermissionGranted = false;
   private barcodeFormatValues: string = "";
+  public googleLensAvailable: any;
   public readonly barcodeFormat = BarcodeFormat;
 
 
@@ -34,12 +41,13 @@ export class SettingsPage implements OnInit {
       });
     }
 
-    this.isSupportedDevice = await this.appStorageService.get('permissionGranted')
+    this.isPermissionGranted = await this.appStorageService.get('permissionGranted')
     if(!this.isPermissionGranted) {
       BarcodeScanner.checkPermissions().then((result) => {
         this.isPermissionGranted = result.camera === 'granted';
       });
     }
+    this.googleLensAvailable = await BarcodeScanner.isGoogleBarcodeScannerModuleAvailable();
   }
 
   toggleDarkMode() {

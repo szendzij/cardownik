@@ -63,11 +63,11 @@
           expand="block"
           (click)="installGoogleBarcodeScannerModule()"
           [disabled]="!isSupportedDevice"
-        >{{ isSupportedDevice ? 'Zainstaluj google lens' : 'Urządzenie nie jest wspierane'}}
+        >{{isSupportedDevice ? 'Zainstaluj google lens' : 'Urządzenie nie jest wspierane'}}
         </ion-button>
       </ion-label>
     </ion-item>
-    <ion-accordion-group>
+    <ion-accordion-group class="">
       <ion-accordion value="first">
         <ion-item slot="header">
           <ion-label>Zaawansowane ustawienia</ion-label>
@@ -104,4 +104,5 @@
       </ion-accordion>
     </ion-accordion-group>
   </ion-item-group>
+  <ion-text>{{this.googleLensAvailable}}</ion-text>
 </ion-content>

@@ -30,19 +30,11 @@
                 <h2 class="ion-text-capitalize">{{card.barcode || ''}}</h2>
               </ion-label>
             </ion-row>
-            <!--              <h2 class="ion-text-capitalize">{{card.barcode || ''}}</h2>-->
-            <!--              <ion-input label="Nazwa sklepu" labelPlacement="stacked" fill="outline" [disabled]="true" value="{{card.barcode || ''}}"></ion-input>-->
-
-            <!--              <ion-input label="Lokalizacja sklepu" labelPlacement="stacked" fill="outline" [disabled]="true" value="{{card.shopLocalization || ''}}"></ion-input>-->
-
-
-            <!--              <h2 class="ion-text-capitalize">{{card.shopLocalization}}</h2>-->
-
           </ion-col>
           <ion-col class="col-right">
             <div class="qrcodeImage" (click)="openDetailsOfCard(card.id)">
               <qrcode
-                [qrdata]="card.barcode || 'dupa'"
+                [qrdata]="card.barcode || ''"
                 [allowEmptyString]="true"
                 [cssClass]="'qrcode'"
                 [colorDark]="'#0c0c0c'"
@@ -53,16 +45,9 @@
                 [width]="75"
               ></qrcode>
             </div>
-            <div>
-              click me!
-            </div>
           </ion-col>
         </ion-row>
       </ion-grid>
-
-
-      <!--      <ion-button class="ion-color-warning" (click)="openDetailsOfCard(card.id)">detailss</ion-button>-->
-
     </ion-card-content>
   </ion-card>
 

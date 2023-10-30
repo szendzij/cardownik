@@ -9,29 +9,40 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="content-center">
-  <ion-card>
-    <form [formGroup]="card">
-
-        <ion-card-header>
-          <ion-card-title>Wprowadź dane do formularza</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-            <ion-item>
-              <ion-label position="floating">Nazwa sklepu</ion-label>
-              <ion-input type="text" formControlName="shopName" clearInput required></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label position="floating">Treść kodu kreskowego / barcodu</ion-label>
-              <ion-input type="text" formControlName="barcode"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label position="floating">Lokalizacja sklepu</ion-label>
-              <ion-input type="text" formControlName="shopLocalization" clearInput required ></ion-input>
-            </ion-item>
-          </ion-card-content>
-      <ion-button color="medium" (click)="cancel()">Anuluj</ion-button>
-      <ion-button (click)="confirm()" [strong]="true">Zapisz</ion-button>
+<ion-content class="content-center ion-padding ion-margin">
+  <ion-card style="height: 80vh">
+    <form [formGroup]="cardForm">
+      <ion-card-header>
+        <ion-card-title>Wprowadź dane do formularza</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-label position="floating">Nazwa sklepu</ion-label>
+          <ion-input type="text" formControlName="shopName" clearInput required></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Treść kodu kreskowego / barcodu</ion-label>
+          <ion-input type="text" formControlName="barcode"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Lokalizacja sklepu</ion-label>
+          <ion-input type="text" formControlName="shopLocalization" clearInput required></ion-input>
+        </ion-item>
+      </ion-card-content>
+      <ion-button
+        slot="start"
+        expand="block"
+        color="medium"
+        (click)="cancel()"
+      >Anuluj
+      </ion-button>
+      <ion-button
+        slot="end"
+        expand="block"
+        (click)="confirm()"
+        [strong]="true"
+      >Zapisz
+      </ion-button>
     </form>
   </ion-card>
 </ion-content>

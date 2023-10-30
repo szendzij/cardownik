@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
+  ActionSheetController, ActionSheetOptions,
   AlertController,
   LoadingController,
   ModalController,
@@ -20,12 +21,10 @@ export class DialogService {
     private alertCtrl: AlertController,
     private modalCtrl: ModalController,
     private loadingCtrl: LoadingController,
-    private popoverCtrl: PopoverController
+    private popoverCtrl: PopoverController,
+    private actionSheetCtrl: ActionSheetController
   ) {}
 
-  public async dismissModal(data?: any, role?: string): Promise<boolean> {
-    return this.modalCtrl.dismiss(data, role);
-  }
 
   public async showAlert(opts?: AlertOptions): Promise<HTMLIonAlertElement> {
     const alert = await this.alertCtrl.create(opts);
@@ -48,6 +47,10 @@ export class DialogService {
     const modal = await this.modalCtrl.create(opts);
     await modal.present();
     return modal;
+  }
+
+  public async dismissModal(data?: any, role?: string): Promise<boolean> {
+    return this.modalCtrl.dismiss(data, role);
   }
 
   public async showPopover(
