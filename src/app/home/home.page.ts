@@ -1,4 +1,4 @@
-import {Component, NgZone, OnChanges, OnInit} from '@angular/core';
+import {Component, NgZone, OnInit} from '@angular/core';
 import {DialogService} from '../core';
 import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {BarcodeScanner} from '@capacitor-mlkit/barcode-scanning';
@@ -7,7 +7,7 @@ import {AppStorageService} from '../core/services/app-storage/app-storage.servic
 import {Card} from "../core/interface/card";
 import {AddCardsFormComponent} from "../add-cards-form/add-cards-form.component";
 import {DetailsCardViewComponent} from "../details-card-view/details-card-view.component";
-import {AnimationController, Platform} from "@ionic/angular";
+import {Platform} from "@ionic/angular";
 import {Geolocation} from "@capacitor/geolocation";
 
 
@@ -16,7 +16,7 @@ import {Geolocation} from "@capacitor/geolocation";
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss']
 })
-export class HomePage implements OnInit, OnChanges {
+export class HomePage implements OnInit {
   public isSupportedDevice = false;
   public isPermissionGranted = false;
   public barcode: string = '';
@@ -32,12 +32,12 @@ export class HomePage implements OnInit, OnChanges {
   public longitude: any;
   public accuracy: any;
 
+
   constructor(
     private appStorageService: AppStorageService,
     private dialogService: DialogService,
     private readonly ngZone: NgZone,
-    private platform: Platform,
-    private animationCtrl: AnimationController) {
+    private platform: Platform) {
   }
 
   async ngOnInit() {
@@ -79,10 +79,6 @@ export class HomePage implements OnInit, OnChanges {
         }
       );
     });
-  }
-
-  async ngOnChanges() {
-    this.cards = await this.appStorageService.get('my-cards');
   }
 
   async locate() {
