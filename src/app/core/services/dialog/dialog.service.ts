@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {
   ActionSheetController, ActionSheetOptions,
-  AlertController,
+  AlertController, AnimationController,
   LoadingController,
   ModalController,
   PopoverController,
@@ -22,9 +22,9 @@ export class DialogService {
     private modalCtrl: ModalController,
     private loadingCtrl: LoadingController,
     private popoverCtrl: PopoverController,
-    private actionSheetCtrl: ActionSheetController
-  ) {}
-
+    private animationCtrl: AnimationController
+  ) {
+  }
 
   public async showAlert(opts?: AlertOptions): Promise<HTMLIonAlertElement> {
     const alert = await this.alertCtrl.create(opts);
@@ -39,7 +39,7 @@ export class DialogService {
       header: 'Błąd',
       buttons: ['OK'],
     };
-    opts = { ...defaultOpts, ...opts };
+    opts = {...defaultOpts, ...opts};
     return this.showAlert(opts);
   }
 
@@ -67,7 +67,7 @@ export class DialogService {
     const defaultOpts: LoadingOptions = {
       message: 'Proszę czekać...',
     };
-    opts = { ...defaultOpts, ...opts };
+    opts = {...defaultOpts, ...opts};
     const loading = await this.loadingCtrl.create(opts);
     await loading.present();
     return loading;

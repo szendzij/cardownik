@@ -7,7 +7,7 @@ import {AppStorageService} from '../core/services/app-storage/app-storage.servic
 import {Card} from "../core/interface/card";
 import {AddCardsFormComponent} from "../add-cards-form/add-cards-form.component";
 import {DetailsCardViewComponent} from "../details-card-view/details-card-view.component";
-import {Platform} from "@ionic/angular";
+import {AnimationController, Platform} from "@ionic/angular";
 import {Geolocation} from "@capacitor/geolocation";
 
 
@@ -36,7 +36,8 @@ export class HomePage implements OnInit, OnChanges {
     private appStorageService: AppStorageService,
     private dialogService: DialogService,
     private readonly ngZone: NgZone,
-    private platform: Platform) {
+    private platform: Platform,
+    private animationCtrl: AnimationController) {
   }
 
   async ngOnInit() {
@@ -46,23 +47,23 @@ export class HomePage implements OnInit, OnChanges {
       this._id = await this.appStorageService.get('id');
     }
 
-    // this.isSupportedDevice = await this.appStorageService.get('supportedDevice');
-    //
-    // if (!this.isSupportedDevice) {
-    //   BarcodeScanner.isSupported().then((result) => {
-    //     this.isSupportedDevice = result.supported;
-    //   });
-    // }
-    // await this.appStorageService.set('supportedDevice', this.isSupportedDevice).then(r => r);
-    //
-    // this.isPermissionGranted = await this.appStorageService.get('permissionGranted');
-    //
-    // if (!this.isPermissionGranted) {
-    //   BarcodeScanner.checkPermissions().then((result) => {
-    //     this.isPermissionGranted = result.camera === 'granted';
-    //   });
-    // }
-    // await this.appStorageService.set('permissionGranted', this.isPermissionGranted).then(r => r);
+    this.isSupportedDevice = await this.appStorageService.get('supportedDevice');
+
+    if (!this.isSupportedDevice) {
+      BarcodeScanner.isSupported().then((result) => {
+        this.isSupportedDevice = result.supported;
+      });
+    }
+    await this.appStorageService.set('supportedDevice', this.isSupportedDevice).then(r => r);
+
+    this.isPermissionGranted = await this.appStorageService.get('permissionGranted');
+
+    if (!this.isPermissionGranted) {
+      BarcodeScanner.checkPermissions().then((result) => {
+        this.isPermissionGranted = result.camera === 'granted';
+      });
+    }
+    await this.appStorageService.set('permissionGranted', this.isPermissionGranted).then(r => r);
 
     BarcodeScanner.removeAllListeners().then(() => {
       BarcodeScanner.addListener(
@@ -141,6 +142,7 @@ export class HomePage implements OnInit, OnChanges {
     }
   }
 
+
   async openDetailsOfCard(id: any) {
     const arrayOfCards = await this.appStorageService.get('my-cards');
     const cardObject: Card = arrayOfCards.find((v: { id: number; }) => v.id === id)
@@ -151,30 +153,14 @@ export class HomePage implements OnInit, OnChanges {
       })
       const {data, role} = await cardDetail.onWillDismiss();
       if (role == 'delete') {
-        await this.remove(data);
+        this.cards = data;
       } else if (role == 'confirm') {
-        await this.editCard(data);
+        this.cards = data;
       } else if(role == 'back') {
         this.cards = data;
       }
     } else {
-      console.log(`No card found with ID ${cardObject}`);
+      await this.dialogService.showErrorAlert({message: 'Wystąpił problem z otwarciem szczegółów karty'})
     }
-  }
-
-  async remove(card: Card) {
-    console.log('remove function from home.page.ts')
-    const arrayOfCards = await this.appStorageService.get('my-cards');
-    const val: Card = arrayOfCards.find((v: { id: number; }) => v.id === card.id)
-    this.cards = arrayOfCards.filter((e: any) => e != val);
-    await this.appStorageService.set('my-cards', this.cards);
-  };
-
-  async editCard(card: Card) {
-    console.log('remove function from home.page.ts')
-    let arrayOfCards = await this.appStorageService.get('my-cards');
-    const cardIndex = arrayOfCards.findIndex((v: { id: number; }) => v.id === card.id);
-    arrayOfCards[cardIndex] = card
-    await this.appStorageService.set('my-cards', arrayOfCards);
   }
 }

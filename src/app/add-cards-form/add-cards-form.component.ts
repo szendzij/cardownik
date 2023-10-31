@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {DialogService} from "../core";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Card} from "../core/interface/card";
@@ -15,6 +15,7 @@ export class AddCardsFormComponent implements OnInit {
 
   public _id: number = 0;
 
+
   @Input()
   public card: Card = {
     id: this._id,
@@ -23,7 +24,6 @@ export class AddCardsFormComponent implements OnInit {
     shopName: "",
     barcode: ""
   }
-
 
   public cardForm = new FormGroup({
     id: new FormControl(),
@@ -45,7 +45,6 @@ export class AddCardsFormComponent implements OnInit {
     this.cardForm.patchValue({shopName: this.card.shopName || ''});
     this.cardForm.patchValue({shopLocalization: this.card.shopLocalization || ''});
   }
-
 
   cancel() {
     return this.dialogService.dismissModal(null, 'cancel');

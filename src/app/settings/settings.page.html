@@ -67,7 +67,7 @@
         </ion-button>
       </ion-label>
     </ion-item>
-    <ion-accordion-group class="">
+    <ion-accordion-group>
       <ion-accordion value="first">
         <ion-item slot="header">
           <ion-label>Zaawansowane ustawienia</ion-label>
@@ -78,7 +78,7 @@
                 (ionChange)="saveBarcodeFormats($event)"
                 label="Formaty kodów kreskowych"
                 label-placement="floating"
-                fill="outline"
+                fill="inline"
                 multiple="true"
                 formControlName="formats"
                 okText="Zapisz"

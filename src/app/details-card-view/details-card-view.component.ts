@@ -43,22 +43,22 @@ export class DetailsCardViewComponent implements OnInit {
         arrayOfCards[cardIndex] = data.value;
         arrayOfCards = Object.assign([], arrayOfCards);
         this.cards = arrayOfCards;
-        await this.appStorageService.set('my-cards', arrayOfCards);
+        await this.appStorageService.set('my-cards', this.cards);
       }
-    console.log('editCard function from details-card-view.page.ts');
   }
 
   async removeCard() {
-    console.log('removeCard function from details-card-view.page.ts');
     const arrayOfCards = await this.appStorageService.get('my-cards');
     const val: Card = arrayOfCards.find((v: { id: number; }) => v.id === this.card.id);
     this.cards = arrayOfCards.filter((e: any) => e != val);
     await this.appStorageService.set('my-cards', this.cards);
+    console.log(this.cards);
     return this.dialogService.dismissModal(this.cards, 'delete');
   };
 
 
-  back() {
+  async back() {
+    this.cards = await this.appStorageService.get('my-cards');
     return this.dialogService.dismissModal(this.cards, 'back');
   }
 
