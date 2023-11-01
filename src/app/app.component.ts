@@ -10,28 +10,10 @@ import {App} from "@capacitor/app";
 })
 export class AppComponent implements OnInit {
 
-  constructor(
-    private platform: Platform,
-    private appStorageService: AppStorageService,
-    private alertController: AlertController) {
+  constructor(private appStorageService: AppStorageService) {
 
   }
   async ngOnInit(): Promise<void> {
     await this.appStorageService.init();
-  }
-
-
-  backButtonEvent() {
-    this.platform.backButton.subscribeWithPriority(10, () => {
-      this.backButtonAlert().then(r => r);
-
-    });
-  }
-
-  async backButtonAlert() {
-    const alert = await this.alertController.create({
-      message: 'You just pressed the back button!'
-    });
-    await alert.present();
   }
 }

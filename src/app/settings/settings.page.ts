@@ -1,13 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { AppStorageService } from '../core/services/app-storage/app-storage.service';
+import {Component, OnInit} from '@angular/core';
+import {AppStorageService} from '../core/services/app-storage/app-storage.service';
 import {
   BarcodeFormat,
-  BarcodeScanner,
-  IsGoogleBarcodeScannerModuleAvailableResult,
-  LensFacing
+  BarcodeScanner
 } from '@capacitor-mlkit/barcode-scanning';
-import { FormGroup, FormControl } from '@angular/forms';
-import {log} from "@capacitor/assets/dist/util/log";
+import {FormGroup, FormControl} from '@angular/forms';
+import {DialogService} from "../core";
 
 @Component({
   selector: 'app-settings',
@@ -27,7 +25,11 @@ export class SettingsPage implements OnInit {
     formats: new FormControl(),
   });
 
-  constructor(private appStorageService: AppStorageService) { }
+  constructor(
+    private appStorageService: AppStorageService,
+    private dialogService: DialogService
+  ) {
+  }
 
   async ngOnInit(): Promise<void> {
     this.darkMode = await this.appStorageService.get('darkModeActivated');
@@ -35,14 +37,14 @@ export class SettingsPage implements OnInit {
     this.formGroup.patchValue({formats: this.barcodeFormatValues})
 
     this.isSupportedDevice = await this.appStorageService.get('supportedDevice')
-    if(!this.isSupportedDevice) {
+    if (!this.isSupportedDevice) {
       BarcodeScanner.isSupported().then((result) => {
         this.isSupportedDevice = result.supported;
       });
     }
 
     this.isPermissionGranted = await this.appStorageService.get('permissionGranted')
-    if(!this.isPermissionGranted) {
+    if (!this.isPermissionGranted) {
       BarcodeScanner.checkPermissions().then((result) => {
         this.isPermissionGranted = result.camera === 'granted';
       });
@@ -64,7 +66,7 @@ export class SettingsPage implements OnInit {
     await BarcodeScanner.installGoogleBarcodeScannerModule();
   }
 
-  saveBarcodeFormats(e:any) {
+  saveBarcodeFormats(e: any) {
     this.appStorageService.set('barcodeFormats', e.detail.value).then(r => r);
   }
 

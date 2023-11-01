@@ -15,7 +15,6 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 
   private async handle(error: unknown): Promise<void> {
     try {
-      console.error(error);
       const message = this.getMessageFromUnknownError(error);
       await this.showErrorAlert(message);
     } catch (errorHandlerError) {
@@ -24,7 +23,6 @@ export class GlobalErrorHandlerService implements ErrorHandler {
   }
 
   private getMessageFromUnknownError(error: unknown): string {
-    console.log(error);
     let message = 'Wystąpił niespodziewany błąd aplikacji';
     if (error instanceof Object && 'rejection' in error) {
       error = (error as any).rejection;

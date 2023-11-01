@@ -1,7 +1,7 @@
 import {Component, NgZone, OnInit} from '@angular/core';
 import {DialogService} from '../core';
 import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {BarcodeScanner} from '@capacitor-mlkit/barcode-scanning';
+import {BarcodeScanner, ScanResult} from '@capacitor-mlkit/barcode-scanning';
 import {FilePicker} from '@capawesome/capacitor-file-picker';
 import {AppStorageService} from '../core/services/app-storage/app-storage.service';
 import {Card} from "../core/interface/card";
@@ -48,8 +48,6 @@ export class HomePage implements OnInit {
       this.cards = await this.appStorageService.get('my-cards');
       this._id = await this.appStorageService.get('id');
     }
-
-    console.log(this.cards)
 
     this.isSupportedDevice = await this.appStorageService.get('supportedDevice');
 
@@ -102,23 +100,38 @@ export class HomePage implements OnInit {
       return;
     }
     const formats = await this.appStorageService.get('barcodeFormats');
-    const {barcodes} = await BarcodeScanner.readBarcodesFromImage({
+    BarcodeScanner.readBarcodesFromImage({
       path,
       formats
-    });
-    this.barcode = barcodes[0].displayValue;
-    await this.appStorageService.set('barcodeVal', this.barcode);
-    await this.showAddCardForm();
+    })
+      .then(async result => {
+        if (result.barcodes[0] == null) {
+          await this.dialogService.showAlert({
+            message: 'Brak kodu kreskowego na zdjęciu',
+          })
+        } else {
+          this.barcode = result.barcodes[0].displayValue;
+          await this.showAddCardForm();
+        }
+      })
+      .catch((error) => {
+        console.log('Error: ', error);
+      })
+
   }
 
   public async scan(): Promise<void> {
     const formats = await this.appStorageService.get('barcodeFormats');
-    const {barcodes} = await BarcodeScanner.scan({
-      formats,
-    });
-    this.barcode = barcodes[0].displayValue;
-    // await this.appStorageService.set('barcodeVal', this.barcode);
-    await this.showAddCardForm();
+    BarcodeScanner.scan({
+      formats
+    })
+      .then(async result => {
+        this.barcode = result.barcodes[0].displayValue;
+        await this.showAddCardForm();
+      })
+      .catch((error) => {
+        console.log('Error', error);
+      })
   }
 
   async showAddCardForm() {
@@ -138,7 +151,6 @@ export class HomePage implements OnInit {
       this._id++;
       await this.appStorageService.set('id', this._id);
       await this.appStorageService.set('my-cards', this.cards);
-
     }
   }
 
@@ -156,7 +168,7 @@ export class HomePage implements OnInit {
         this.cards = data;
       } else if (role == 'confirm') {
         this.cards = data;
-      } else if(role == 'back') {
+      } else if (role == 'back') {
         this.cards = data;
       }
     } else {

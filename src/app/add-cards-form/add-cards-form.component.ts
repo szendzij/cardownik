@@ -38,7 +38,7 @@ export class AddCardsFormComponent implements OnInit {
       id: new FormControl(),
       cardName: new FormControl('', [Validators.required, Validators.minLength(2)]),
       barcode: new FormControl('', [Validators.required, Validators.minLength(2)]),
-      objectLocalization: new FormControl('', [Validators.required, Validators.minLength(2)]),
+      objectLocalization: new FormControl('', ),
       modified: new FormControl(new Date().toLocaleString("pl-PL"))
     });
     this._id = await this.appStorageService.get('id');

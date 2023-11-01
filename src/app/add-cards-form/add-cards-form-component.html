@@ -20,14 +20,13 @@
       <form [formGroup]="cardForm" (ngSubmit)="confirm()">
         <ion-row>
           <ion-col size="10">
-            <ion-item lines="none">
+            <ion-item >
               <ion-input
                 type="text"
                 label="Nazwa karty"
                 labelPlacement="floating"
                 placeholder="Wprowadź nazwę karty"
                 formControlName="cardName"
-                fill="solid"
                 clearInput
                 required
               ></ion-input>
@@ -37,14 +36,13 @@
         </ion-row>
         <ion-row class="ion-align-items-center">
           <ion-col size="10">
-            <ion-item lines="none">
+            <ion-item>
               <ion-input
                 type="text"
                 label="Kod kreskowy"
                 labelPlacement="floating"
                 placeholder="Wprowadź wartość kodu kreskowego"
                 formControlName="barcode"
-                fill="solid"
                 clearInput
                 required
               ></ion-input>
@@ -68,16 +66,14 @@
         </ion-row>
         <ion-row>
           <ion-col size="10">
-            <ion-item lines="none">
+            <ion-item >
               <ion-input
                 type="text"
                 label="Adres obiektu"
                 labelPlacement="floating"
                 placeholder="Wprowadź adres obiektu"
                 formControlName="objectLocalization"
-                fill="solid"
                 clearInput
-                required
               ></ion-input>
             </ion-item>
 <!--            <div-->
@@ -113,11 +109,11 @@
             <ion-button
               expand="block"
               type="submit"
-              color="{{cardForm.valid ? 'primary' : 'danger'}}"
+              color="{{cardForm.valid ? 'primary' : 'warning'}}"
               disabled="{{!cardForm.valid}}"
               (click)="confirm()"
               [strong]="true"
-            >{{cardForm.valid ? 'Zapisz' : 'Błędne dane'}}
+            >{{cardForm.valid ? 'Zapisz' : 'Uzupełnij dane'}}
             </ion-button>
           </ion-col>
         </ion-row>

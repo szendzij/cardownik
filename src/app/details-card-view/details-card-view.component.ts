@@ -1,9 +1,10 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {DialogService} from "../core";
 import {AppStorageService} from "../core/services/app-storage/app-storage.service";
 import {Card} from "../core/interface/card";
-import {Platform} from "@ionic/angular";
+import {AlertController, ModalController, Platform} from "@ionic/angular";
 import {AddCardsFormComponent} from "../add-cards-form/add-cards-form.component";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'details-card-view-component',
@@ -12,6 +13,7 @@ import {AddCardsFormComponent} from "../add-cards-form/add-cards-form.component"
 })
 export class DetailsCardViewComponent implements OnInit {
   public screenWidth: number = 0;
+  private backButtonSubscription: Subscription;
 
   @Output()
   public cards: Card[] = [];
@@ -22,29 +24,36 @@ export class DetailsCardViewComponent implements OnInit {
   constructor(
     private readonly dialogService: DialogService,
     private appStorageService: AppStorageService,
-    private platform: Platform) {
-
+    private platform: Platform,
+    private modalCtrl: ModalController) {
   }
 
   async ngOnInit() {
     this.screenWidth = this.platform.width();
+    this.platform.backButton.subscribeWithPriority(999, async () => {
+      const modal = await this.modalCtrl.getTop();
+      if (modal) {
+        this.cards = await this.appStorageService.get('my-cards');
+        return await modal.dismiss(this.cards, 'back');
+      }
+    })
   }
 
   async editCard() {
-      const cardDetail = await this.dialogService.showModal({
-        component: AddCardsFormComponent,
-        componentProps: {card: this.card}
-      })
-      const {data, role} = await cardDetail.onWillDismiss();
-      if(role == 'confirm') {
-        this.card = data.value;
-        let arrayOfCards = await this.appStorageService.get('my-cards');
-        const cardIndex = arrayOfCards.findIndex((v: { id: number; }) => v.id === data.value.id);
-        arrayOfCards[cardIndex] = data.value;
-        arrayOfCards = Object.assign([], arrayOfCards);
-        this.cards = arrayOfCards;
-        await this.appStorageService.set('my-cards', this.cards);
-      }
+    const cardDetail = await this.dialogService.showModal({
+      component: AddCardsFormComponent,
+      componentProps: {card: this.card}
+    })
+    const {data, role} = await cardDetail.onWillDismiss();
+    if (role == 'confirm') {
+      this.card = data.value;
+      let arrayOfCards = await this.appStorageService.get('my-cards');
+      const cardIndex = arrayOfCards.findIndex((v: { id: number; }) => v.id === data.value.id);
+      arrayOfCards[cardIndex] = data.value;
+      arrayOfCards = Object.assign([], arrayOfCards);
+      this.cards = arrayOfCards;
+      await this.appStorageService.set('my-cards', this.cards);
+    }
   }
 
   async removeCard() {
@@ -61,11 +70,4 @@ export class DetailsCardViewComponent implements OnInit {
     this.cards = await this.appStorageService.get('my-cards');
     return this.dialogService.dismissModal(this.cards, 'back');
   }
-
-  backButtonEvent() {
-    this.platform.backButton.subscribeWithPriority(10, () => {
-      this.back().then(r => r);
-    });
-  }
-
 }

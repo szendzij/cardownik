@@ -26,24 +26,24 @@
             <ion-col>
               <p>
                 <ion-label>
-                  <ion-text color="medium">Adres obiektu</ion-text>
-                </ion-label>
-                <br/>
-                <ion-text>
-                  <strong class="ion-text-capitalize nowrap-text">{{card.objectLocalization}}</strong>
-                </ion-text>
-              </p>
-            </ion-col>
-          </ion-row>
-          <ion-row class="list-of-rows">
-            <ion-col>
-              <p>
-                <ion-label>
                   <ion-text color="medium">Kod kreskowy</ion-text>
                 </ion-label>
                 <br/>
                 <ion-text>
                   <strong class="nowrap-text">{{card.barcode}}</strong>
+                </ion-text>
+              </p>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="card.objectLocalization" class="list-of-rows">
+            <ion-col>
+              <p>
+                <ion-label>
+                  <ion-text color="medium">Adres obiektu</ion-text>
+                </ion-label>
+                <br/>
+                <ion-text>
+                  <strong class="ion-text-capitalize nowrap-text">{{card.objectLocalization}}</strong>
                 </ion-text>
               </p>
             </ion-col>

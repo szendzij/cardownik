@@ -47,6 +47,7 @@
 /* This is added for the flashing that happens when toggling between themes */
 ion-item {
   --transition: none;
+  --ion-border-color: var(--ion-color-medium-shade);
 }
 
 .qrcode svg {
