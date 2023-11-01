@@ -12,41 +12,48 @@
 <ion-content class="content-center ion-padding ion-margin">
   <ion-list content="full" class="cardStyle">
     <ion-grid>
-      <ion-row>
+      <ion-row class="ion-margin">
         <ion-col>
-          <ion-header class="ion-margin-horizontal">Wprowadź dane do formularza</ion-header>
+          <ion-header>Wprowadź dane do formularza</ion-header>
         </ion-col>
       </ion-row>
-      <form [formGroup]="cardForm">
+      <form [formGroup]="cardForm" (ngSubmit)="confirm()">
         <ion-row>
-          <ion-col>
+          <ion-col size="10">
             <ion-item lines="none">
-              <ion-label position="floating">Nazwa sklepu</ion-label>
               <ion-input
                 type="text"
-                placeholder="Wprowadź nazwę sklepu"
-                formControlName="shopName"
+                label="Nazwa karty"
+                labelPlacement="floating"
+                placeholder="Wprowadź nazwę karty"
+                formControlName="cardName"
+                fill="solid"
                 clearInput
                 required
               ></ion-input>
             </ion-item>
           </ion-col>
+          <ion-col size="2"></ion-col>
         </ion-row>
         <ion-row class="ion-align-items-center">
           <ion-col size="10">
             <ion-item lines="none">
-              <ion-label position="floating">Treść kodu kreskowego / barcodu</ion-label>
               <ion-input
                 type="text"
+                label="Kod kreskowy"
+                labelPlacement="floating"
                 placeholder="Wprowadź wartość kodu kreskowego"
                 formControlName="barcode"
+                fill="solid"
+                clearInput
+                required
               ></ion-input>
             </ion-item>
           </ion-col>
           <ion-col size="2">
             <div class="qrcodeImage content-center">
               <qrcode
-                [qrdata]="this.cardForm.controls.barcode.value || ''"
+                [qrdata]="this.cardForm.controls['barcode'].value || ''"
                 [allowEmptyString]="true"
                 [cssClass]="'qrcode'"
                 [colorDark]="'#0c0c0c'"
@@ -60,20 +67,40 @@
           </ion-col>
         </ion-row>
         <ion-row>
-          <ion-col>
+          <ion-col size="10">
             <ion-item lines="none">
-              <ion-label position="floating">Lokalizacja sklepu</ion-label>
               <ion-input
                 type="text"
-                placeholder="Wprowadź adres sklepu"
-                formControlName="shopLocalization"
+                label="Adres obiektu"
+                labelPlacement="floating"
+                placeholder="Wprowadź adres obiektu"
+                formControlName="objectLocalization"
+                fill="solid"
                 clearInput
                 required
               ></ion-input>
             </ion-item>
+<!--            <div-->
+<!--              *ngIf="this.cardForm.controls['objectLocalization'].invalid"-->
+<!--            >-->
+<!--              <div-->
+<!--                class="ion-padding-horizontal"-->
+<!--                *ngIf="this.cardForm.controls['objectLocalization'].errors?.['required']"-->
+<!--              >-->
+<!--                <ion-text color="#7a202c">Adres lokalizacji jest wymagany</ion-text>-->
+<!--              </div>-->
+<!--              <div-->
+<!--                class="ion-padding-horizontal"-->
+<!--                color="#7a202c"-->
+<!--                *ngIf="this.cardForm.controls['objectLocalization'].errors?.['minlength']"-->
+<!--              >-->
+<!--                <ion-text color="#7a202c">Adres lokalizacji powinien zawierać minimalnie 2 znaki</ion-text>-->
+<!--              </div>-->
+<!--            </div>-->
           </ion-col>
+          <ion-col size="2"></ion-col>
         </ion-row>
-        <ion-row>
+        <ion-row class="ion-margin">
           <ion-col size="6">
             <ion-button
               expand="block"
@@ -85,9 +112,12 @@
           <ion-col size="6">
             <ion-button
               expand="block"
+              type="submit"
+              color="{{cardForm.valid ? 'primary' : 'danger'}}"
+              disabled="{{!cardForm.valid}}"
               (click)="confirm()"
               [strong]="true"
-            >Zapisz
+            >{{cardForm.valid ? 'Zapisz' : 'Błędne dane'}}
             </ion-button>
           </ion-col>
         </ion-row>

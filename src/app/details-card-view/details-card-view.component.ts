@@ -62,4 +62,10 @@ export class DetailsCardViewComponent implements OnInit {
     return this.dialogService.dismissModal(this.cards, 'back');
   }
 
+  backButtonEvent() {
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      this.back().then(r => r);
+    });
+  }
+
 }

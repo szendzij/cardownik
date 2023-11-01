@@ -1,6 +1,6 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {DialogService} from "../core";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Card} from "../core/interface/card";
 import {AppStorageService} from "../core/services/app-storage/app-storage.service";
 
@@ -15,35 +15,37 @@ export class AddCardsFormComponent implements OnInit {
 
   public _id: number = 0;
 
+  public cardForm: FormGroup;
+
 
   @Input()
   public card: Card = {
     id: this._id,
     modified: "",
-    shopLocalization: "",
-    shopName: "",
+    objectLocalization: "",
+    cardName: "",
     barcode: ""
   }
 
-  public cardForm = new FormGroup({
-    id: new FormControl(),
-    shopName: new FormControl('', Validators.required),
-    barcode: new FormControl(''),
-    shopLocalization: new FormControl('', Validators.required),
-    modified: new FormControl(new Date().toLocaleString("pl-PL"))
-  });
-
   constructor(
     private readonly dialogService: DialogService,
-    private appStorageService: AppStorageService) {
+    private appStorageService: AppStorageService,
+    public formBuilder: FormBuilder) {
   }
 
   async ngOnInit() {
+    this.cardForm = this.formBuilder.group({
+      id: new FormControl(),
+      cardName: new FormControl('', [Validators.required, Validators.minLength(2)]),
+      barcode: new FormControl('', [Validators.required, Validators.minLength(2)]),
+      objectLocalization: new FormControl('', [Validators.required, Validators.minLength(2)]),
+      modified: new FormControl(new Date().toLocaleString("pl-PL"))
+    });
     this._id = await this.appStorageService.get('id');
     this.cardForm.patchValue({id: this.card.id || this._id})
     this.cardForm.patchValue({barcode: this.barcode || this.card.barcode});
-    this.cardForm.patchValue({shopName: this.card.shopName || ''});
-    this.cardForm.patchValue({shopLocalization: this.card.shopLocalization || ''});
+    this.cardForm.patchValue({cardName: this.card.cardName || ''});
+    this.cardForm.patchValue({objectLocalization: this.card.objectLocalization || ''});
   }
 
   cancel() {
@@ -51,8 +53,9 @@ export class AddCardsFormComponent implements OnInit {
   }
 
   confirm() {
-    return this.dialogService.dismissModal(this.cardForm, 'confirm');
+    if (this.cardForm.valid) {
+      return this.dialogService.dismissModal(this.cardForm, 'confirm');
+    }
   }
-
 
 }

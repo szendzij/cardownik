@@ -10,19 +10,6 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="content-center ion-padding">
-  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-    <ion-fab-button size="small">
-      <ion-icon name="chevron-up-circle"></ion-icon>
-    </ion-fab-button>
-    <ion-fab-list side="top">
-      <ion-fab-button (click)="removeCard()">
-        <ion-icon name="trash-outline"></ion-icon>
-      </ion-fab-button>
-      <ion-fab-button (click)="editCard()">
-        <ion-icon name="create-outline"></ion-icon>
-      </ion-fab-button>
-    </ion-fab-list>
-  </ion-fab>
   <ion-list content="full" class="cardStyle">
     <ion-grid>
       <ion-col>
@@ -40,29 +27,46 @@
               [width]="this.screenWidth / 1.2"
             ></qrcode>
             <ion-text class="ion-margin">
-              <strong>{{this.card.barcode}}</strong>
+              <strong class="nowrap-text">{{this.card.barcode}}</strong>
             </ion-text>
           </div>
         </div>
         <div class="ion-margin">
           <h1>
             <ion-label>
-              <ion-text color="medium">Nazwa sklepu</ion-text>
+              <ion-text color="medium">Nazwa karty</ion-text>
             </ion-label>
             <br/>
             <ion-text class="ion-text-capitalize">
-              <strong>{{this.card.shopName}}</strong>
+              <strong>{{this.card.cardName}}</strong>
             </ion-text>
           </h1>
         </div>
         <div class="ion-margin">
           <h1>
             <ion-label>
-              <ion-text color="medium">Mapa</ion-text>
+              <ion-text color="medium">Adres obiektu</ion-text>
             </ion-label>
+            <br/>
+            <ion-text>
+              <strong>{{this.card.objectLocalization}}</strong>
+            </ion-text>
           </h1>
         </div>
       </ion-col>
     </ion-grid>
   </ion-list>
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button size="small">
+      <ion-icon name="chevron-up-circle"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button (click)="removeCard()">
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button (click)="editCard()">
+        <ion-icon name="create-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
 </ion-content>

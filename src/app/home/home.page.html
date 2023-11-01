@@ -6,50 +6,67 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="content-center">
 
-  <ion-button (click)="showAddCardForm()">Add Card Form</ion-button>
-  <ion-button (click)="locate()">locate</ion-button>
+  <ion-button *ngIf="!isSupportedDevice" (click)="showAddCardForm()">Add Card Form</ion-button>
+  <ion-button *ngIf="!isSupportedDevice" (click)="locate()">locate</ion-button>
 
-  <ion-card *ngFor="let card of cards">
-    <h1 class="ion-margin-horizontal ion-text-capitalize">{{card.shopName}}</h1>
-    <ion-card-content>
-      <ion-grid>
-        <ion-row>
-          <ion-col>
-            <ion-row>
-              <ion-label>
-                <h2>Lokalizacja sklepu</h2>
-                <h2 class="ion-text-capitalize">{{card.shopLocalization || ''}}</h2>
-              </ion-label>
-            </ion-row>
-            <br/>
-            <ion-row>
-              <ion-label>
-                <h2>Wartość barcodu</h2>
-                <h2 class="ion-text-capitalize">{{card.barcode || ''}}</h2>
-              </ion-label>
-            </ion-row>
-          </ion-col>
-          <ion-col class="col-right">
-            <div class="qrcodeImage" (click)="openDetailsOfCard(card.id)">
-              <qrcode
-                [qrdata]="card.barcode || ''"
-                [allowEmptyString]="true"
-                [cssClass]="'qrcode'"
-                [colorDark]="'#0c0c0c'"
-                [colorLight]="'#ffffff'"
-                [elementType]="'svg'"
-                [errorCorrectionLevel]="'M'"
-                [margin]="2"
-                [width]="75"
-              ></qrcode>
-            </div>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-card-content>
-  </ion-card>
+  <ion-list content="full" class="cardStyle ion-margin" *ngFor="let card of cards">
+    <ion-grid (click)="openDetailsOfCard(card.id)">
+      <ion-row class="ion-justify-content-between">
+        <ion-col size="8">
+          <ion-row class="list-of-rows">
+            <ion-col>
+              <ion-text class="ion-text-uppercase heading">
+                <strong>{{card.cardName}}</strong>
+              </ion-text>
+            </ion-col>
+          </ion-row>
+          <ion-row class="list-of-rows">
+            <ion-col>
+              <p>
+                <ion-label>
+                  <ion-text color="medium">Adres obiektu</ion-text>
+                </ion-label>
+                <br/>
+                <ion-text>
+                  <strong class="ion-text-capitalize nowrap-text">{{card.objectLocalization}}</strong>
+                </ion-text>
+              </p>
+            </ion-col>
+          </ion-row>
+          <ion-row class="list-of-rows">
+            <ion-col>
+              <p>
+                <ion-label>
+                  <ion-text color="medium">Kod kreskowy</ion-text>
+                </ion-label>
+                <br/>
+                <ion-text>
+                  <strong class="nowrap-text">{{card.barcode}}</strong>
+                </ion-text>
+              </p>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+        <ion-col size="4" class="ion-justify-content-center ion-align-items-center" style="display: flex">
+          <ion-row class="qrcodeImage">
+            <qrcode
+              [qrdata]="card.barcode || ''"
+              [allowEmptyString]="true"
+              [cssClass]="'qrcode'"
+              [colorDark]="'#0c0c0c'"
+              [colorLight]="'#ffffff'"
+              [elementType]="'svg'"
+              [errorCorrectionLevel]="'M'"
+              [margin]="2"
+              [width]="this.screenWidth / 4.5"
+            ></qrcode>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-list>
 
 
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">

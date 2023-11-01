@@ -1,9 +1,7 @@
-import {Barcode} from "@capacitor-mlkit/barcode-scanning";
-
 export interface Card {
     id?: number,
-    shopName: string,
+    cardName: string,
     barcode: string;
-    shopLocalization: string,
+    objectLocalization: string,
     modified: string
 }

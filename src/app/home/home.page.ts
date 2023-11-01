@@ -27,6 +27,8 @@ export class HomePage implements OnInit {
     formats: new UntypedFormControl([]),
   });
 
+  public screenWidth: any;
+
   public coords: any;
   public latitude: any;
   public longitude: any;
@@ -41,11 +43,13 @@ export class HomePage implements OnInit {
   }
 
   async ngOnInit() {
-    this.platform.width();
+    this.screenWidth = this.platform.width();
     if (await this.appStorageService.get('my-cards') != null) {
       this.cards = await this.appStorageService.get('my-cards');
       this._id = await this.appStorageService.get('id');
     }
+
+    console.log(this.cards)
 
     this.isSupportedDevice = await this.appStorageService.get('supportedDevice');
 
@@ -126,8 +130,8 @@ export class HomePage implements OnInit {
     if (role == 'confirm') {
       this.cards.unshift({
         id: this._id,
-        shopName: data.value.shopName,
-        shopLocalization: data.value.shopLocalization,
+        cardName: data.value.cardName,
+        objectLocalization: data.value.objectLocalization,
         modified: data.value.modified,
         barcode: data.value.barcode
       })

@@ -3,3 +3,25 @@
   flex-direction: column;
   align-items: center;
 }
+
+.nowrap-text {
+  display: block;
+  max-width: 14rem;
+  max-height: 1rem;
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.heading {
+  font-size: min(1.8rem, 3rem);
+  //color: var(--ion-color-primary);
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.list-of-rows {
+  max-height: 4rem;
+  max-width: 15rem;
+}

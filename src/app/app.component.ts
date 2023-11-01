@@ -13,14 +13,8 @@ export class AppComponent implements OnInit {
   constructor(
     private platform: Platform,
     private appStorageService: AppStorageService,
-    private alertController: AlertController,
-    @Optional() private routerOutlet?: IonRouterOutlet) {
-    this.platform.backButton.subscribeWithPriority(-1, () => {
-      // @ts-ignore
-      if (!this.routerOutlet.canGoBack()) {
-        App.exitApp().then(r => r);
-      }
-    });
+    private alertController: AlertController) {
+
   }
   async ngOnInit(): Promise<void> {
     await this.appStorageService.init();
@@ -30,6 +24,7 @@ export class AppComponent implements OnInit {
   backButtonEvent() {
     this.platform.backButton.subscribeWithPriority(10, () => {
       this.backButtonAlert().then(r => r);
+
     });
   }
 

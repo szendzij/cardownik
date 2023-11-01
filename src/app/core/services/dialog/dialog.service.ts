@@ -4,7 +4,7 @@ import {
   AlertController, AnimationController,
   LoadingController,
   ModalController,
-  PopoverController,
+  PopoverController, ToastController,
 } from '@ionic/angular';
 import {
   AlertOptions,
@@ -22,7 +22,6 @@ export class DialogService {
     private modalCtrl: ModalController,
     private loadingCtrl: LoadingController,
     private popoverCtrl: PopoverController,
-    private animationCtrl: AnimationController
   ) {
   }
 
