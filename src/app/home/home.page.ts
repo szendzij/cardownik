@@ -1,7 +1,7 @@
 import {Component, NgZone, OnInit} from '@angular/core';
 import {DialogService} from '../core';
 import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {BarcodeScanner, ScanResult} from '@capacitor-mlkit/barcode-scanning';
+import {BarcodeScanner} from '@capacitor-mlkit/barcode-scanning';
 import {FilePicker} from '@capawesome/capacitor-file-picker';
 import {AppStorageService} from '../core/services/app-storage/app-storage.service';
 import {Card} from "../core/interface/card";
@@ -9,7 +9,6 @@ import {AddCardsFormComponent} from "../add-cards-form/add-cards-form.component"
 import {DetailsCardViewComponent} from "../details-card-view/details-card-view.component";
 import {Platform} from "@ionic/angular";
 import {Geolocation} from "@capacitor/geolocation";
-
 
 @Component({
   selector: 'app-home',
@@ -27,13 +26,10 @@ export class HomePage implements OnInit {
     formats: new UntypedFormControl([]),
   });
 
-  public screenWidth: any;
-
+  public screenWidth: number = 0;
   public coords: any;
   public latitude: any;
   public longitude: any;
-  public accuracy: any;
-
 
   constructor(
     private appStorageService: AppStorageService,
@@ -83,16 +79,6 @@ export class HomePage implements OnInit {
     });
   }
 
-  async locate() {
-    const coordinates = await Geolocation.getCurrentPosition();
-    this.latitude = coordinates.coords.latitude;
-    this.longitude = coordinates.coords.longitude;
-    this.accuracy = coordinates.coords.accuracy;
-    console.log(this.latitude)
-    console.log(this.longitude)
-    console.log(this.accuracy)
-  }
-
   public async readBarcodeFromImage(): Promise<void> {
     const {files} = await FilePicker.pickImages({multiple: false});
     const path = files[0]?.path;
@@ -105,7 +91,7 @@ export class HomePage implements OnInit {
       formats
     })
       .then(async result => {
-        if (result.barcodes[0] == null) {
+        if (result.barcodes[0].displayValue == undefined) {
           await this.dialogService.showAlert({
             message: 'Brak kodu kreskowego na zdjęciu',
           })
@@ -174,5 +160,17 @@ export class HomePage implements OnInit {
     } else {
       await this.dialogService.showErrorAlert({message: 'Wystąpił problem z otwarciem szczegółów karty'})
     }
+  }
+
+
+
+  async locate() {
+    const coordinates = await Geolocation.getCurrentPosition();
+    this.latitude = coordinates.coords.latitude;
+    this.longitude = coordinates.coords.longitude;
+    console.log(this.latitude)
+    console.log(this.longitude)
+
+
   }
 }

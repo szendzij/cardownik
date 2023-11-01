@@ -1,10 +1,10 @@
-import {Component, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, Input, OnInit, Output} from '@angular/core';
 import {DialogService} from "../core";
 import {AppStorageService} from "../core/services/app-storage/app-storage.service";
 import {Card} from "../core/interface/card";
-import {AlertController, ModalController, Platform} from "@ionic/angular";
+import {ModalController, Platform} from "@ionic/angular";
 import {AddCardsFormComponent} from "../add-cards-form/add-cards-form.component";
-import {Subscription} from "rxjs";
+
 
 @Component({
   selector: 'details-card-view-component',
@@ -13,7 +13,6 @@ import {Subscription} from "rxjs";
 })
 export class DetailsCardViewComponent implements OnInit {
   public screenWidth: number = 0;
-  private backButtonSubscription: Subscription;
 
   @Output()
   public cards: Card[] = [];

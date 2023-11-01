@@ -9,7 +9,6 @@
 <ion-content [fullscreen]="true" class="content-center">
 
   <ion-button *ngIf="!isSupportedDevice" (click)="showAddCardForm()">Add Card Form</ion-button>
-  <ion-button *ngIf="!isSupportedDevice" (click)="locate()">locate</ion-button>
 
   <ion-list content="full" class="cardStyle ion-margin" *ngFor="let card of cards">
     <ion-grid (click)="openDetailsOfCard(card.id)">
@@ -74,11 +73,14 @@
       <ion-icon name="chevron-up-circle"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="top">
-      <ion-fab-button aria-label="Skanuj kartę" (click)="scan()">
+      <ion-fab-button aria-label="scan using camera" style="{{isSupportedDevice ? '' : 'display: none;'}}" (click)="scan()">
         <ion-icon name="barcode-outline"></ion-icon>
       </ion-fab-button>
-      <ion-fab-button aria-label="Skanuj ze zdjęcia" (click)="readBarcodeFromImage()">
+      <ion-fab-button aria-label="scan from image"  (click)="readBarcodeFromImage()">
         <ion-icon name="image-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button aria-label="add manually" (click)="showAddCardForm()">
+        <ion-icon name="add-outline"></ion-icon>
       </ion-fab-button>
     </ion-fab-list>
   </ion-fab>

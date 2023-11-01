@@ -11,6 +11,7 @@ import { AddCardsFormComponentModule } from "./add-cards-form/add-cards-form-com
 import {QRCodeModule} from "angularx-qrcode";
 import {DetailsCardViewComponentModule} from "./details-card-view/details-card-view-component.module";
 
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -26,7 +27,6 @@ import {DetailsCardViewComponentModule} from "./details-card-view/details-card-v
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: ErrorHandler, useClass: GlobalErrorHandlerService }
-
   ],
   bootstrap: [AppComponent],
 })
