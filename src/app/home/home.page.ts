@@ -22,10 +22,6 @@ export class HomePage implements OnInit {
   public cards: Card[] = [];
   private _id: number = 0;
   public isSupported = false;
-  public formGroup = new UntypedFormGroup({
-    formats: new UntypedFormControl([]),
-  });
-
   public screenWidth: number = 0;
   public coords: any;
   public latitude: any;
@@ -34,7 +30,6 @@ export class HomePage implements OnInit {
   constructor(
     private appStorageService: AppStorageService,
     private dialogService: DialogService,
-    private readonly ngZone: NgZone,
     private platform: Platform) {
   }
 
@@ -44,39 +39,8 @@ export class HomePage implements OnInit {
       this.cards = await this.appStorageService.get('my-cards');
       this._id = await this.appStorageService.get('id');
     }
-
     this.isSupportedDevice = await this.appStorageService.get('supportedDevice');
-
-    if (!this.isSupportedDevice) {
-      BarcodeScanner.isSupported().then((result) => {
-        this.isSupportedDevice = result.supported;
-      });
-    }
-    await this.appStorageService.set('supportedDevice', this.isSupportedDevice).then(r => r);
-
     this.isPermissionGranted = await this.appStorageService.get('permissionGranted');
-
-    if (!this.isPermissionGranted) {
-      BarcodeScanner.checkPermissions().then((result) => {
-        this.isPermissionGranted = result.camera === 'granted';
-      });
-    }
-    await this.appStorageService.set('permissionGranted', this.isPermissionGranted).then(r => r);
-
-    BarcodeScanner.removeAllListeners().then(() => {
-      BarcodeScanner.addListener(
-        'googleBarcodeScannerModuleInstallProgress',
-        (event) => {
-          this.ngZone.run(() => {
-            const {state, progress} = event;
-            this.formGroup.patchValue({
-              googleBarcodeScannerModuleInstallState: state,
-              googleBarcodeScannerModuleInstallProgress: progress,
-            });
-          });
-        }
-      );
-    });
   }
 
   public async readBarcodeFromImage(): Promise<void> {

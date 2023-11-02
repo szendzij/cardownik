@@ -1,5 +1,7 @@
 import { ErrorHandler, Injectable, Injector } from '@angular/core';
 import { DialogService } from '../dialog/dialog.service';
+import { BarcodeScanner } from "@capacitor-mlkit/barcode-scanning";
+import { BarcodeScannerWeb } from "@capacitor-mlkit/barcode-scanning/dist/esm/web";
 
 const LOGTAG = '[GlobalErrorHandlerService]';
 

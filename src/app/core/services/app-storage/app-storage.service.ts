@@ -23,17 +23,4 @@ export class AppStorageService {
   public async get(key: string): Promise<any> {
     return this._storage?.get(key).then(value => value || null );
   }
-  //
-  // public async remove(key: string): Promise<void> {
-  //   await this._storage?.remove(key).then(value => value);
-  // }
-  //
-  // public async clear(): Promise<void> {
-  //   await this._storage?.clear().then(value => value);
-  // }
-  //
-  // public async keys(): Promise<void> {
-  //   await this._storage?.keys().then(value => value);
-  // }
-
 }

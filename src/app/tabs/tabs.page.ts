@@ -11,7 +11,7 @@ export class TabsPage implements OnInit {
   constructor(private appStorageService: AppStorageService) { }
 
   async ngOnInit(): Promise<void> {
-    this.checkAppMode();
+    await this.checkAppMode();
   }
 
   public async checkAppMode() {

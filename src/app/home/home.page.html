@@ -9,6 +9,7 @@
 <ion-content [fullscreen]="true" class="content-center">
 
   <ion-button *ngIf="!isSupportedDevice" (click)="showAddCardForm()">Add Card Form</ion-button>
+  <ion-button *ngIf="!isSupportedDevice" (click)="locate()">LOCATE</ion-button>
 
   <ion-list content="full" class="cardStyle ion-margin" *ngFor="let card of cards">
     <ion-grid (click)="openDetailsOfCard(card.id)">
@@ -23,44 +24,36 @@
           </ion-row>
           <ion-row class="list-of-rows">
             <ion-col>
-              <p>
+              <h5>
                 <ion-label>
                   <ion-text color="medium">Kod kreskowy</ion-text>
                 </ion-label>
-                <br/>
+                <br />
                 <ion-text>
                   <strong class="nowrap-text">{{card.barcode}}</strong>
                 </ion-text>
-              </p>
+              </h5>
             </ion-col>
           </ion-row>
           <ion-row *ngIf="card.objectLocalization" class="list-of-rows">
             <ion-col>
-              <p>
+              <h5>
                 <ion-label>
                   <ion-text color="medium">Adres obiektu</ion-text>
                 </ion-label>
-                <br/>
+                <br />
                 <ion-text>
                   <strong class="ion-text-capitalize nowrap-text">{{card.objectLocalization}}</strong>
                 </ion-text>
-              </p>
+              </h5>
             </ion-col>
           </ion-row>
         </ion-col>
         <ion-col size="4" class="ion-justify-content-center ion-align-items-center" style="display: flex">
           <ion-row class="qrcodeImage">
-            <qrcode
-              [qrdata]="card.barcode || ''"
-              [allowEmptyString]="true"
-              [cssClass]="'qrcode'"
-              [colorDark]="'#0c0c0c'"
-              [colorLight]="'#ffffff'"
-              [elementType]="'svg'"
-              [errorCorrectionLevel]="'M'"
-              [margin]="2"
-              [width]="this.screenWidth / 4.5"
-            ></qrcode>
+            <qrcode [qrdata]="card.barcode || ''" [allowEmptyString]="true" [cssClass]="'qrcode'"
+              [colorDark]="'#0c0c0c'" [colorLight]="'#ffffff'" [elementType]="'svg'" [errorCorrectionLevel]="'M'"
+              [margin]="2" [width]="this.screenWidth / 4.5"></qrcode>
           </ion-row>
         </ion-col>
       </ion-row>
@@ -73,10 +66,10 @@
       <ion-icon name="chevron-up-circle"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="top">
-      <ion-fab-button aria-label="scan using camera" style="{{isSupportedDevice ? '' : 'display: none;'}}" (click)="scan()">
+      <ion-fab-button aria-label="scan using camera" (click)="scan()">
         <ion-icon name="barcode-outline"></ion-icon>
       </ion-fab-button>
-      <ion-fab-button aria-label="scan from image"  (click)="readBarcodeFromImage()">
+      <ion-fab-button aria-label="scan from image" (click)="readBarcodeFromImage()">
         <ion-icon name="image-outline"></ion-icon>
       </ion-fab-button>
       <ion-fab-button aria-label="add manually" (click)="showAddCardForm()">

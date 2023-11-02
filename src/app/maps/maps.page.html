@@ -1,12 +1,15 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Mapa sklepów
+      Mapa zapisanych kart
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
 
-  <app-explore-container name="Mapa sklepów"></app-explore-container>
+<ion-content>
+  <div class="container">
+    <capacitor-google-map #map></capacitor-google-map>
+  </div>
 </ion-content>
+

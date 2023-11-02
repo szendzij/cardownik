@@ -1,11 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, NgZone, OnInit} from '@angular/core';
 import {AppStorageService} from '../core/services/app-storage/app-storage.service';
 import {
   BarcodeFormat,
   BarcodeScanner
 } from '@capacitor-mlkit/barcode-scanning';
 import {FormGroup, FormControl} from '@angular/forms';
-import {DialogService} from "../core";
+import {GoogleBarcodeScannerModuleInstallProgressEvent} from "@capacitor-mlkit/barcode-scanning/dist/esm/definitions";
 
 @Component({
   selector: 'app-settings',
@@ -14,11 +14,13 @@ import {DialogService} from "../core";
 })
 export class SettingsPage implements OnInit {
   public darkMode?: boolean;
-  public isSupportedDevice = false;
-  public isPermissionGranted = false;
-  private barcodeFormatValues: string = "";
-  public googleLensAvailable: any;
+  public isSupportedDevice: boolean = false;
+  public isPermissionGranted: boolean = false;
+  private barcodeFormatValues: string[] = [];
+  public googleLensAvailable: boolean = false
   public readonly barcodeFormat = BarcodeFormat;
+  private readonly ngZone: NgZone;
+
 
 
   public formGroup = new FormGroup({
@@ -26,8 +28,7 @@ export class SettingsPage implements OnInit {
   });
 
   constructor(
-    private appStorageService: AppStorageService,
-    private dialogService: DialogService
+    private appStorageService: AppStorageService
   ) {
   }
 
@@ -35,21 +36,8 @@ export class SettingsPage implements OnInit {
     this.darkMode = await this.appStorageService.get('darkModeActivated');
     this.barcodeFormatValues = await this.appStorageService.get('barcodeFormats');
     this.formGroup.patchValue({formats: this.barcodeFormatValues})
-
     this.isSupportedDevice = await this.appStorageService.get('supportedDevice')
-    if (!this.isSupportedDevice) {
-      BarcodeScanner.isSupported().then((result) => {
-        this.isSupportedDevice = result.supported;
-      });
-    }
-
     this.isPermissionGranted = await this.appStorageService.get('permissionGranted')
-    if (!this.isPermissionGranted) {
-      BarcodeScanner.checkPermissions().then((result) => {
-        this.isPermissionGranted = result.camera === 'granted';
-      });
-    }
-    this.googleLensAvailable = await BarcodeScanner.isGoogleBarcodeScannerModuleAvailable();
   }
 
   toggleDarkMode() {
@@ -66,6 +54,10 @@ export class SettingsPage implements OnInit {
     await BarcodeScanner.installGoogleBarcodeScannerModule();
   }
 
+  async isGoogleBarcodeScannerModuleAvailable() {
+    await BarcodeScanner.isGoogleBarcodeScannerModuleAvailable();
+  }
+
   saveBarcodeFormats(e: any) {
     this.appStorageService.set('barcodeFormats', e.detail.value).then(r => r);
   }
@@ -75,7 +67,13 @@ export class SettingsPage implements OnInit {
   }
 
   async requestPermissions(): Promise<void> {
-    await BarcodeScanner.requestPermissions();
+    await BarcodeScanner.requestPermissions().then(r => {
+      if(r.camera === "granted"){
+        return "granted"
+      } else {
+        return "denied"
+      }
+    });
   }
 
 

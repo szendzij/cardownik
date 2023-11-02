@@ -14,14 +14,11 @@
 }
 
 .heading {
-  font-size: min(1.8rem, 3rem);
+  font-size: min(1.6rem, 3rem);
   color: var(--ion-color-primary-tint);
-  white-space: nowrap;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
 }
 
 .list-of-rows {
-  max-height: 4rem;
   max-width: 15rem;
+  max-height: 5rem;
 }
