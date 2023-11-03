@@ -9,7 +9,9 @@
 <ion-content [fullscreen]="true">
   <ion-item-group>
     <ion-item-divider>
-      <ion-label><h2>Wygląd</h2></ion-label>
+      <ion-label>
+        <h2>Wygląd</h2>
+      </ion-label>
     </ion-item-divider>
 
     <ion-item lines="none">
@@ -20,17 +22,16 @@
   <ion-item-group>
     <ion-item-divider>
       <ion-label>
-        <ion-label><h2>Uprawnienia</h2></ion-label>
+        <ion-label>
+          <h2>Uprawnienia</h2>
+        </ion-label>
       </ion-label>
     </ion-item-divider>
     <ion-item lines="none">
       <ion-label>
         <ion-text>Uprawnienia do używania aparatu</ion-text>
-        <ion-button
-          expand="block"
-          class="ion-margin-vertical"
-          (click)="requestPermissions()" [disabled]="isPermissionGranted || !isSupportedDevice"
-        >{{isPermissionGranted ? 'Uprawnienia już nadano' : 'Nadaj uprawnienia do używania aparatu'}}
+        <ion-button expand="block" class="ion-margin-vertical" (click)="requestPermissions()"
+          [disabled]="isPermissionGranted">Nadaj uprawnienia
         </ion-button>
       </ion-label>
     </ion-item>
@@ -38,33 +39,24 @@
   <ion-item-group>
     <ion-item-divider>
       <ion-label>
-        <ion-label><h2>Ustawienia Android</h2></ion-label>
+        <ion-label>
+          <h2>Ustawienia Android</h2>
+        </ion-label>
       </ion-label>
     </ion-item-divider>
     <ion-item lines="none">
       <ion-label>
-        <ion-text>Przejdź do ustawień aplikacji w ustawieniach android</ion-text>
-        <ion-button
-          color="{{isSupportedDevice ? 'primary' : 'danger' }}"
-          expand="block"
-          class="ion-margin-vertical"
-          (click)="openSettings()"
-          [disabled]="!isSupportedDevice"
-        >{{ isSupportedDevice ? 'Otwórz ustawienia' : 'Urządzenie nie jest wspierane'}}
+        <ion-text>Przejdź do ustawień android</ion-text>
+        <ion-button expand="block" class="ion-margin-vertical" (click)="openSettings()" [disabled]="!isSupportedDevice">
+          Otwórz ustawienia
         </ion-button>
       </ion-label>
     </ion-item>
     <ion-item lines="none">
       <ion-label>
         <ion-text>Zainstaluj Google Lens</ion-text>
-        <ion-button
-          color="{{isSupportedDevice ? 'primary' : 'danger' }}"
-          class="ion-margin-vertical"
-          expand="block"
-          (click)="installGoogleBarcodeScannerModule()"
-          [disabled]="!isSupportedDevice"
-        >{{isSupportedDevice ? 'Zainstaluj google lens' : 'Urządzenie nie jest wspierane'}}
-        </ion-button>
+        <ion-button class="ion-margin-vertical" expand="block" (click)="installGoogleBarcodeScannerModule()"
+          [disabled]="!googleLensInstallState">Instaluj</ion-button>
       </ion-label>
     </ion-item>
     <ion-accordion-group>
@@ -74,35 +66,26 @@
         </ion-item>
         <div class="ion-padding" slot="content">
           <form [formGroup]="formGroup">
-              <ion-select
-                (ionChange)="saveBarcodeFormats($event)"
-                label="Formaty kodów kreskowych"
-                label-placement="floating"
-                fill="inline"
-                multiple="true"
-                formControlName="formats"
-                okText="Zapisz"
-                cancelText="Anuluj"
-                class="ion-margin-vertical"
-              >
-                <ion-select-option [value]="barcodeFormat.Aztec">Aztec</ion-select-option>
-                <ion-select-option [value]="barcodeFormat.Codabar">Codabar</ion-select-option>
-                <ion-select-option [value]="barcodeFormat.Code39">Code39</ion-select-option>
-                <ion-select-option [value]="barcodeFormat.Code93">Code93</ion-select-option>
-                <ion-select-option [value]="barcodeFormat.Code128">Code128</ion-select-option>
-                <ion-select-option [value]="barcodeFormat.DataMatrix">DataMatrix</ion-select-option>
-                <ion-select-option [value]="barcodeFormat.Ean8">Ean8</ion-select-option>
-                <ion-select-option [value]="barcodeFormat.Ean13">Ean13</ion-select-option>
-                <ion-select-option [value]="barcodeFormat.Itf">Itf</ion-select-option>
-                <ion-select-option [value]="barcodeFormat.Pdf417">Pdf417</ion-select-option>
-                <ion-select-option [value]="barcodeFormat.QrCode">QrCode</ion-select-option>
-                <ion-select-option [value]="barcodeFormat.UpcA">UpcA</ion-select-option>
-                <ion-select-option [value]="barcodeFormat.UpcE">UpcE</ion-select-option>
-              </ion-select>
+            <ion-select (ionChange)="saveBarcodeFormats($event)" label="Formaty kodów kreskowych"
+              label-placement="floating" fill="inline" multiple="true" formControlName="formats" okText="Zapisz"
+              cancelText="Anuluj" class="ion-margin-vertical">
+              <ion-select-option [value]="barcodeFormat.Aztec">Aztec</ion-select-option>
+              <ion-select-option [value]="barcodeFormat.Codabar">Codabar</ion-select-option>
+              <ion-select-option [value]="barcodeFormat.Code39">Code39</ion-select-option>
+              <ion-select-option [value]="barcodeFormat.Code93">Code93</ion-select-option>
+              <ion-select-option [value]="barcodeFormat.Code128">Code128</ion-select-option>
+              <ion-select-option [value]="barcodeFormat.DataMatrix">DataMatrix</ion-select-option>
+              <ion-select-option [value]="barcodeFormat.Ean8">Ean8</ion-select-option>
+              <ion-select-option [value]="barcodeFormat.Ean13">Ean13</ion-select-option>
+              <ion-select-option [value]="barcodeFormat.Itf">Itf</ion-select-option>
+              <ion-select-option [value]="barcodeFormat.Pdf417">Pdf417</ion-select-option>
+              <ion-select-option [value]="barcodeFormat.QrCode">QrCode</ion-select-option>
+              <ion-select-option [value]="barcodeFormat.UpcA">UpcA</ion-select-option>
+              <ion-select-option [value]="barcodeFormat.UpcE">UpcE</ion-select-option>
+            </ion-select>
           </form>
         </div>
       </ion-accordion>
     </ion-accordion-group>
   </ion-item-group>
-<!--  <ion-text >{{this.googleLensAvailable}}</ion-text>-->
 </ion-content>

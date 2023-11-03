@@ -1,7 +1,7 @@
-import {Component, NgZone, OnInit} from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { AppStorageService } from './core/services/app-storage/app-storage.service';
-import {BarcodeScanner} from "@capacitor-mlkit/barcode-scanning";
-import {FormGroup} from "@angular/forms";
+import { BarcodeScanner } from "@capacitor-mlkit/barcode-scanning";
+import { FormGroup } from "@angular/forms";
 
 @Component({
   selector: 'app-root',
@@ -41,22 +41,24 @@ export class AppComponent implements OnInit {
       });
     await this.appStorageService.set('permissionGranted', checkPermissions);
 
-   BarcodeScanner.removeAllListeners().then(() => {
-      BarcodeScanner.addListener(
-        'googleBarcodeScannerModuleInstallProgress',
-        (event) => {
-          this.ngZone.run(() => {
-            const {state, progress} = event;
-            // this.formGroup.patchValue({
-            //   googleBarcodeScannerModuleInstallState: state,
-            //   googleBarcodeScannerModuleInstallProgress: progress,
-            // });
+    // BarcodeScanner.removeAllListeners().then(() => {
+    //   BarcodeScanner.addListener(
+    //     'googleBarcodeScannerModuleInstallProgress',
+    //     (event) => {
+    //       this.ngZone.run(() => {
+    //         const { state, progress } = event;
+    //         // this.formGroup.patchValue({
+    //         //   googleBarcodeScannerModuleInstallState: state,
+    //         //   googleBarcodeScannerModuleInstallProgress: progress,
+    //         // });
 
-            console.log(state)
-            console.log(progress)
-          });
-        }
-      );
-    });
+
+    //         this.appStorageService.set('googleBarcodeScannerModuleInstallState', state);
+    //         console.log(state)
+    //         console.log(progress)
+    //       });
+    //     }
+    //   );
+    // });
   }
 }

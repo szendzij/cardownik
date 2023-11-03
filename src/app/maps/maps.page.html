@@ -9,7 +9,11 @@
 
 <ion-content>
   <div class="container">
-    <capacitor-google-map #map></capacitor-google-map>
+    <!-- <capacitor-google-map #map></capacitor-google-map> -->
+    <google-map [options]="options" [height]="screenHeight" width="auto">
+
+      <map-marker [options]="markerOptions"></map-marker>
+
+    </google-map>
   </div>
 </ion-content>
-

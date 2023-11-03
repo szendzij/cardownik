@@ -1,9 +1,9 @@
-import {Component, Input, OnInit, Output} from '@angular/core';
-import {DialogService} from "../core";
-import {AppStorageService} from "../core/services/app-storage/app-storage.service";
-import {Card} from "../core/interface/card";
-import {ModalController, Platform} from "@ionic/angular";
-import {AddCardsFormComponent} from "../add-cards-form/add-cards-form.component";
+import { Component, Input, OnInit, Output } from '@angular/core';
+import { DialogService } from "../core";
+import { AppStorageService } from "../core/services/app-storage/app-storage.service";
+import { Card } from "../core/interface/card";
+import { ModalController, Platform } from "@ionic/angular";
+import { AddCardsFormComponent } from "../add-cards-form/add-cards-form.component";
 
 
 @Component({
@@ -13,6 +13,11 @@ import {AddCardsFormComponent} from "../add-cards-form/add-cards-form.component"
 })
 export class DetailsCardViewComponent implements OnInit {
   public screenWidth: number = 0;
+  public screenHeight: number = 0;
+  public latitude: number;
+  public longitude: number;
+  markerOptions: google.maps.MarkerOptions;
+  options: google.maps.MapOptions;
 
   @Output()
   public cards: Card[] = [];
@@ -29,6 +34,7 @@ export class DetailsCardViewComponent implements OnInit {
 
   async ngOnInit() {
     this.screenWidth = this.platform.width();
+    this.screenHeight = this.platform.height();
     this.platform.backButton.subscribeWithPriority(999, async () => {
       const modal = await this.modalCtrl.getTop();
       if (modal) {
@@ -36,14 +42,35 @@ export class DetailsCardViewComponent implements OnInit {
         return await modal.dismiss(this.cards, 'back');
       }
     })
+    this.screenHeight = this.platform.height();
+    this.screenWidth = this.platform.width();
+
+    this.markerOptions = {
+      draggable: false,
+      position: {
+        lat: 51.1134163,
+        lng: 16.9503138
+      }
+    };
+
+    this.options = {
+      zoom: 13,
+      disableDefaultUI: true,
+      draggable: false,
+      clickableIcons: false,
+      center: {
+        lat: 51.1134163,
+        lng: 16.9503138
+      }
+    }
   }
 
   async editCard() {
     const cardDetail = await this.dialogService.showModal({
       component: AddCardsFormComponent,
-      componentProps: {card: this.card}
+      componentProps: { card: this.card }
     })
-    const {data, role} = await cardDetail.onWillDismiss();
+    const { data, role } = await cardDetail.onWillDismiss();
     if (role == 'confirm') {
       this.card = data.value;
       let arrayOfCards = await this.appStorageService.get('my-cards');

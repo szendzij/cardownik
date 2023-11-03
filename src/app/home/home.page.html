@@ -7,10 +7,6 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="content-center">
-
-  <ion-button *ngIf="!isSupportedDevice" (click)="showAddCardForm()">Add Card Form</ion-button>
-  <ion-button *ngIf="!isSupportedDevice" (click)="locate()">LOCATE</ion-button>
-
   <ion-list content="full" class="cardStyle ion-margin" *ngFor="let card of cards">
     <ion-grid (click)="openDetailsOfCard(card.id)">
       <ion-row class="ion-justify-content-between">
