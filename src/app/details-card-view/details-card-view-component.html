@@ -46,9 +46,9 @@
           </h1>
           <br>
           <div class="google-map">
-            <google-map [options]="options" [height]="screenHeight / 5" width="auto">
+            <google-map [options]="options" [height]="screenHeight / 5" width="auto" [center]="center">
 
-              <map-marker [options]="markerOptions"></map-marker>
+              <map-marker [position]="markerPosition" [options]="markerOptions"></map-marker>
 
             </google-map>
           </div>

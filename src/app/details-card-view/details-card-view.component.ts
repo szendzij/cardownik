@@ -1,9 +1,11 @@
-import { Component, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, Output, ElementRef } from '@angular/core';
 import { DialogService } from "../core";
 import { AppStorageService } from "../core/services/app-storage/app-storage.service";
 import { Card } from "../core/interface/card";
 import { ModalController, Platform } from "@ionic/angular";
 import { AddCardsFormComponent } from "../add-cards-form/add-cards-form.component";
+import { NativeGeocoder } from '@capgo/nativegeocoder';
+import { environment } from 'src/environments/environment';
 
 
 @Component({
@@ -16,8 +18,17 @@ export class DetailsCardViewComponent implements OnInit {
   public screenHeight: number = 0;
   public latitude: number;
   public longitude: number;
-  markerOptions: google.maps.MarkerOptions;
-  options: google.maps.MapOptions;
+  public center: google.maps.LatLngLiteral;
+  public markerPosition: google.maps.LatLngLiteral;
+  public markerOptions: google.maps.MarkerOptions = {
+    draggable: false
+  }
+  public options: google.maps.MapOptions = {
+    zoom: 15,
+    disableDefaultUI: true,
+    draggable: false,
+    clickableIcons: false,
+  }
 
   @Output()
   public cards: Card[] = [];
@@ -33,6 +44,7 @@ export class DetailsCardViewComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.geocoding(this.card.objectLocalization);
     this.screenWidth = this.platform.width();
     this.screenHeight = this.platform.height();
     this.platform.backButton.subscribeWithPriority(999, async () => {
@@ -44,25 +56,6 @@ export class DetailsCardViewComponent implements OnInit {
     })
     this.screenHeight = this.platform.height();
     this.screenWidth = this.platform.width();
-
-    this.markerOptions = {
-      draggable: false,
-      position: {
-        lat: 51.1134163,
-        lng: 16.9503138
-      }
-    };
-
-    this.options = {
-      zoom: 13,
-      disableDefaultUI: true,
-      draggable: false,
-      clickableIcons: false,
-      center: {
-        lat: 51.1134163,
-        lng: 16.9503138
-      }
-    }
   }
 
   async editCard() {
@@ -96,4 +89,21 @@ export class DetailsCardViewComponent implements OnInit {
     this.cards = await this.appStorageService.get('my-cards');
     return this.dialogService.dismissModal(this.cards, 'back');
   }
+
+
+  async geocoding(localization: string) {
+    const location = await NativeGeocoder.forwardGeocode({
+      addressString: localization,
+      apiKey: environment.apiKey
+    })
+    this.center = {
+      lat: location.addresses[0].latitude,
+      lng: location.addresses[0].longitude
+    }
+    this.markerPosition = {
+      lat: location.addresses[0].latitude,
+      lng: location.addresses[0].longitude
+    }
+  }
+
 }

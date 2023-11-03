@@ -20,7 +20,6 @@ export class HomePage implements OnInit {
   public barcode: string = '';
   public cards: Card[] = [];
   private _id: number = 0;
-  public isSupported = false;
   public screenWidth: number = 0;
   public coords: any;
   public latitude: any;

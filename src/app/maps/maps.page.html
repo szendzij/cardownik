@@ -9,11 +9,20 @@
 
 <ion-content>
   <div class="container">
-    <!-- <capacitor-google-map #map></capacitor-google-map> -->
-    <google-map [options]="options" [height]="screenHeight" width="auto">
+    <google-map [height]="screenHeight" width="auto" [zoom]="zoom" [center]="center" [options]="options">
 
       <map-marker [options]="markerOptions"></map-marker>
 
     </google-map>
   </div>
+
+  <ion-fab-button class="fab-position_locate" size="small" (click)="locate()">
+    <ion-icon name="locate-outline"></ion-icon>
+  </ion-fab-button>
+  <ion-fab-button class="fab-position_zoomIn" size="small" aria-label="scan from image" (click)="zoomIn()">
+    <ion-icon name="add-outline"></ion-icon>
+  </ion-fab-button>
+  <ion-fab-button class="fab-position_zoomOut" size="small" aria-label="add manually" (click)="zoomOut()">
+    <ion-icon name="remove-outline"></ion-icon>
+  </ion-fab-button>
 </ion-content>
