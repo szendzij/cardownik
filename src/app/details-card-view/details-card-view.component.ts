@@ -92,10 +92,23 @@ export class DetailsCardViewComponent implements OnInit {
 
 
   async geocoding(localization: string) {
-    const location = await NativeGeocoder.forwardGeocode({
-      addressString: localization,
-      apiKey: environment.apiKey
-    })
+  //   const location = await NativeGeocoder.forwardGeocode({
+  //     addressString: localization,
+  //     apiKey: environment.apiKey
+  //   })
+  //   this.center = {
+  //     lat: location.addresses[0].latitude,
+  //     lng: location.addresses[0].longitude
+  //   }
+  //   this.markerPosition = {
+  //     lat: location.addresses[0].latitude,
+  //     lng: location.addresses[0].longitude
+  //   }
+  // }
+  await NativeGeocoder.forwardGeocode({
+    addressString: localization,
+    apiKey: environment.apiKey
+  }).then(location => {
     this.center = {
       lat: location.addresses[0].latitude,
       lng: location.addresses[0].longitude
@@ -104,6 +117,19 @@ export class DetailsCardViewComponent implements OnInit {
       lat: location.addresses[0].latitude,
       lng: location.addresses[0].longitude
     }
-  }
+  })
+    .catch(error => {
+      this.center = {
+        lat: 62.12006656851271,
+        lng:  -6.9356200290182795
+      }
+      this.markerPosition = {
+        lat: 62.12006656851271,
+        lng:  -6.9356200290182795
+      }
+      console.log("Error: ", error);
+    })
+
+}
 
 }

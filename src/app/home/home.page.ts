@@ -99,6 +99,7 @@ export class HomePage implements OnInit {
       this._id++;
       await this.appStorageService.set('id', this._id);
       await this.appStorageService.set('my-cards', this.cards);
+      this.barcode = '';
     }
   }
 

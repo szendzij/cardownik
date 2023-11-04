@@ -24,7 +24,7 @@
                 <ion-label>
                   <ion-text color="medium">Kod kreskowy</ion-text>
                 </ion-label>
-                <br />
+                <br/>
                 <ion-text>
                   <strong class="nowrap-text">{{card.barcode}}</strong>
                 </ion-text>
@@ -37,7 +37,7 @@
                 <ion-label>
                   <ion-text color="medium">Adres obiektu</ion-text>
                 </ion-label>
-                <br />
+                <br/>
                 <ion-text>
                   <strong class="ion-text-capitalize nowrap-text">{{card.objectLocalization}}</strong>
                 </ion-text>
@@ -48,8 +48,8 @@
         <ion-col size="4" class="ion-justify-content-center ion-align-items-center" style="display: flex">
           <ion-row class="qrcodeImage">
             <qrcode [qrdata]="card.barcode || ''" [allowEmptyString]="true" [cssClass]="'qrcode'"
-              [colorDark]="'#0c0c0c'" [colorLight]="'#ffffff'" [elementType]="'svg'" [errorCorrectionLevel]="'M'"
-              [margin]="2" [width]="this.screenWidth / 4.5"></qrcode>
+                    [colorDark]="'#0c0c0c'" [colorLight]="'#ffffff'" [elementType]="'svg'" [errorCorrectionLevel]="'M'"
+                    [margin]="2" [width]="this.screenWidth / 4.5"></qrcode>
           </ion-row>
         </ion-col>
       </ion-row>
@@ -60,7 +60,7 @@
       <ion-icon name="chevron-up-circle"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="top">
-      <ion-fab-button [disabled]="!isSupportedDevice" aria-label="scan using camera" (click)="scan()">
+      <ion-fab-button aria-label="scan using camera" (click)="scan()">
         <ion-icon name="barcode-outline"></ion-icon>
       </ion-fab-button>
       <ion-fab-button aria-label="scan from image" (click)="readBarcodeFromImage()">
