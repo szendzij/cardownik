@@ -1,12 +1,11 @@
-import { AfterViewInit, Component, Input, OnInit, Output, ElementRef } from '@angular/core';
-import { DialogService } from "../core";
-import { AppStorageService } from "../core/services/app-storage/app-storage.service";
-import { Card } from "../core/interface/card";
-import { ModalController, Platform } from "@ionic/angular";
-import { AddCardsFormComponent } from "../add-cards-form/add-cards-form.component";
-import { NativeGeocoder } from '@capgo/nativegeocoder';
-import { environment } from 'src/environments/environment';
-
+import {Component, Input, OnInit, Output} from '@angular/core';
+import {DialogService} from "../core";
+import {AppStorageService} from "../core/services/app-storage/app-storage.service";
+import {Card} from "../core/interface/card";
+import {ModalController, Platform} from "@ionic/angular";
+import {AddCardsFormComponent} from "../add-cards-form/add-cards-form.component";
+import {NativeGeocoder} from '@capgo/nativegeocoder';
+import {environment} from 'src/environments/environment';
 
 @Component({
   selector: 'details-card-view-component',
@@ -18,10 +17,11 @@ export class DetailsCardViewComponent implements OnInit {
   public screenHeight: number = 0;
   public latitude: number;
   public longitude: number;
+  public isLocationFound: boolean = true;
   public center: google.maps.LatLngLiteral;
   public markerPosition: google.maps.LatLngLiteral;
   public markerOptions: google.maps.MarkerOptions = {
-    draggable: false
+    draggable: false,
   }
   public options: google.maps.MapOptions = {
     zoom: 15,
@@ -44,7 +44,7 @@ export class DetailsCardViewComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.geocoding(this.card.objectLocalization);
+    await this.geocoding(this.card.objectLocalization);
     this.screenWidth = this.platform.width();
     this.screenHeight = this.platform.height();
     this.platform.backButton.subscribeWithPriority(999, async () => {
@@ -54,18 +54,17 @@ export class DetailsCardViewComponent implements OnInit {
         return await modal.dismiss(this.cards, 'back');
       }
     })
-    this.screenHeight = this.platform.height();
-    this.screenWidth = this.platform.width();
   }
 
   async editCard() {
     const cardDetail = await this.dialogService.showModal({
       component: AddCardsFormComponent,
-      componentProps: { card: this.card }
+      componentProps: {card: this.card}
     })
-    const { data, role } = await cardDetail.onWillDismiss();
+    const {data, role} = await cardDetail.onWillDismiss();
     if (role == 'confirm') {
       this.card = data.value;
+      await this.geocoding(this.card.objectLocalization)
       let arrayOfCards = await this.appStorageService.get('my-cards');
       const cardIndex = arrayOfCards.findIndex((v: { id: number; }) => v.id === data.value.id);
       arrayOfCards[cardIndex] = data.value;
@@ -80,7 +79,6 @@ export class DetailsCardViewComponent implements OnInit {
     const val: Card = arrayOfCards.find((v: { id: number; }) => v.id === this.card.id);
     this.cards = arrayOfCards.filter((e: any) => e != val);
     await this.appStorageService.set('my-cards', this.cards);
-    console.log(this.cards);
     return this.dialogService.dismissModal(this.cards, 'delete');
   };
 
@@ -92,44 +90,27 @@ export class DetailsCardViewComponent implements OnInit {
 
 
   async geocoding(localization: string) {
-  //   const location = await NativeGeocoder.forwardGeocode({
-  //     addressString: localization,
-  //     apiKey: environment.apiKey
-  //   })
-  //   this.center = {
-  //     lat: location.addresses[0].latitude,
-  //     lng: location.addresses[0].longitude
-  //   }
-  //   this.markerPosition = {
-  //     lat: location.addresses[0].latitude,
-  //     lng: location.addresses[0].longitude
-  //   }
-  // }
-  await NativeGeocoder.forwardGeocode({
-    addressString: localization,
-    apiKey: environment.apiKey
-  }).then(location => {
-    this.center = {
-      lat: location.addresses[0].latitude,
-      lng: location.addresses[0].longitude
-    }
-    this.markerPosition = {
-      lat: location.addresses[0].latitude,
-      lng: location.addresses[0].longitude
-    }
-  })
-    .catch(error => {
+    await NativeGeocoder.forwardGeocode({
+      addressString: localization,
+      apiKey: environment.apiKey
+    }).then(location => {
+      this.isLocationFound = true;
+      this.markerOptions = {
+        animation: google.maps.Animation.DROP
+      }
       this.center = {
-        lat: 62.12006656851271,
-        lng:  -6.9356200290182795
+        lat: location.addresses[0].latitude,
+        lng: location.addresses[0].longitude
       }
       this.markerPosition = {
-        lat: 62.12006656851271,
-        lng:  -6.9356200290182795
+        lat: location.addresses[0].latitude,
+        lng: location.addresses[0].longitude,
       }
-      console.log("Error: ", error);
     })
-
-}
+      .catch(error => {
+        this.isLocationFound = false;
+        console.info("Not found given address");
+      })
+  }
 
 }

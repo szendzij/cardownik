@@ -35,12 +35,10 @@ export class AddCardsFormComponent implements OnInit {
 
   constructor(
     private readonly dialogService: DialogService,
-    private appStorageService: AppStorageService,
     public formBuilder: FormBuilder) {
   }
 
   async ngOnInit() {
-
     this.cardForm.patchValue({ id: this.card.id || this._id })
     this.cardForm.patchValue({ barcode: this.barcode || this.card.barcode });
     this.cardForm.patchValue({ cardName: this.card.cardName || '' });

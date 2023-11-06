@@ -1,6 +1,10 @@
-import { Component, ElementRef, OnInit } from '@angular/core';
-import { Geolocation } from "@capacitor/geolocation";
-import { Platform } from '@ionic/angular';
+import {Component, OnInit} from '@angular/core';
+import {Geolocation} from "@capacitor/geolocation";
+import {Platform} from '@ionic/angular';
+import {AppStorageService} from "../core/services/app-storage/app-storage.service";
+import {NativeGeocoder} from "@capgo/nativegeocoder";
+import {environment} from "../../environments/environment";
+import {Card} from "../core/interface/card";
 
 @Component({
   selector: 'app-Maps',
@@ -13,19 +17,23 @@ export class MapsPage implements OnInit {
   public latitude: number;
   public longitude: number;
   public zoom: number = 15;
-  public elementRef: ElementRef;
-
-
+  public cards: Card[];
+  public markers: any[];
+  public markerPosition: google.maps.LatLngLiteral;
   public center: google.maps.LatLngLiteral;
-  markerOptions: google.maps.MarkerOptions = {
-    draggable: false,
-    position: {
-      lat: 51.1134163,
-      lng: 16.9503138
-    }
-  };
 
-  public options: google.maps.MapOptions = {
+  public tagSvgRaw = (name: string) => `
+    <svg xmlns="http://www.w3.org/2000/svg" width="71" height="45" viewBox="0 0 71 45" fill="none">
+      <rect width="71" height="37" rx="10" fill="#3880ff"/>
+      <path d="M35 45L27 37H43L35 45Z" fill="#3880ff"/>
+      <text x="50%" y="24"
+            text-anchor="middle" fill="#FFF"
+            font-size="14px" font-family="sans-serif" font-weight="bold">
+            ${name}
+      </text>
+    </svg>`;
+
+  public mapOptions: google.maps.MapOptions = {
     minZoom: 1,
     maxZoom: 100,
     disableDefaultUI: true,
@@ -37,10 +45,12 @@ export class MapsPage implements OnInit {
 
 
   constructor(
-    private platform: Platform
-  ) { }
+    private platform: Platform,
+    private appStorageService: AppStorageService
+  ) {
+  }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.screenHeight = this.platform.height();
     this.screenWidth = this.platform.width();
     navigator.geolocation.getCurrentPosition((position) => {
@@ -51,16 +61,48 @@ export class MapsPage implements OnInit {
     });
   }
 
+  async ionViewDidEnter() {
+    await this.addMarkers();
+  }
+
+  async addMarkers() {
+    this.markers = await this.appStorageService.get('my-cards').then(async cards => {
+      const markersArray = [];
+      let marker;
+      for (let card of cards) {
+        marker = await NativeGeocoder.forwardGeocode({
+          addressString: card.objectLocalization,
+          apiKey: environment.apiKey
+        }).then(location => {
+            return {
+              position: {
+                lat: location.addresses[0].latitude,
+                lng: location.addresses[0].longitude
+              },
+              icon: {
+                url: this.encodeSVG(this.tagSvgRaw(card.cardName)),
+                scaledSize: new google.maps.Size(64, 64),
+              }
+            }
+          }
+        )
+          .catch(error => {
+            console.info("Not found given address");
+          })
+        if (marker !== undefined) {
+          markersArray.push(marker);
+        }
+      }
+      return markersArray;
+    });
+  }
+
 
   async locate() {
     const geolocation = await Geolocation.getCurrentPosition();
-    this.latitude = geolocation.coords.latitude;
-    this.longitude = geolocation.coords.longitude;
-
     this.center = {
       lat: geolocation.coords.latitude,
       lng: geolocation.coords.longitude
-
     }
   }
 
@@ -72,7 +114,17 @@ export class MapsPage implements OnInit {
     if (this.zoom > 1) this.zoom--;
   }
 
-  clickFab(event: any) {
-    event.stopPropagation();
+  encodeSVG(rawSvgString: string) {
+    const symbols = /[\r\n%#()<>?\[\\\]^`{|}]/g;
+    rawSvgString = rawSvgString
+      .replace(/'/g, '"')
+      .replace(/>\s+</g, '><')
+      .replace(/\s{2,}/g, ' ');
+
+    return (
+      'data:image/svg+xml;utf-8,' +
+      rawSvgString.replace(symbols, encodeURIComponent)
+    );
   }
+
 }

@@ -125,15 +125,4 @@ export class HomePage implements OnInit {
     }
   }
 
-
-
-  async locate() {
-    const coordinates = await Geolocation.getCurrentPosition();
-    this.latitude = coordinates.coords.latitude;
-    this.longitude = coordinates.coords.longitude;
-    console.log(this.latitude)
-    console.log(this.longitude)
-
-
-  }
 }
