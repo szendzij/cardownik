@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { DialogService } from '../core';
-import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
+import { BarcodeFormat, BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
 import { FilePicker } from '@capawesome/capacitor-file-picker';
 import { AppStorageService } from '../core/services/app-storage/app-storage.service';
 import { Card } from "../core/interface/card";
@@ -20,9 +20,6 @@ export class HomePage implements OnInit {
   public cards: Card[] = [];
   private _id: number = 0;
   public screenWidth: number = 0;
-  public coords: any;
-  public latitude: any;
-  public longitude: any;
 
   constructor(
     private appStorageService: AppStorageService,
@@ -73,6 +70,10 @@ export class HomePage implements OnInit {
       formats
     })
       .then(async result => {
+        //to check
+        // const found = formats.find((el: BarcodeFormat) => el === result.barcodes[0].format)
+        // await this.dialogService.showErrorAlert({ message: 'znaleziono format' })
+
         this.barcode = result.barcodes[0].displayValue;
         await this.showAddCardForm();
       })
