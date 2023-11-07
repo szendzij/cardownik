@@ -52,22 +52,19 @@ export class MapsPage implements OnInit {
   }
 
   async ngOnInit() {
+    const location = await Geolocation.getCurrentPosition({
+      enableHighAccuracy: true
+    })
+    this.center = {
+      lat: location.coords.latitude,
+      lng: location.coords.longitude
+    }
     this.screenHeight = this.platform.height();
     this.screenWidth = this.platform.width();
-    navigator.geolocation.getCurrentPosition((position) => {
-      this.center = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-      }
-    });
-    // console.log(this.markers.length)
   }
 
   async ionViewWillEnter() {
     await this.addMarkers();
-    // this.markerOptions = {
-    //   animation: google.maps.Animation.DROP
-    // }
   }
 
   async addMarkers() {

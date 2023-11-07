@@ -13,6 +13,7 @@ export class TabsPage implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.checkAppMode();
+
   }
 
   public async checkAppMode() {

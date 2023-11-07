@@ -1,4 +1,4 @@
-import { CapacitorConfig } from '@capacitor/cli';
+import {CapacitorConfig} from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'io.ionic.starter',
@@ -6,6 +6,12 @@ const config: CapacitorConfig = {
   webDir: 'www',
   server: {
     androidScheme: 'https'
+  },
+  plugins: {
+    LocalNotifications: {
+      // smallIcon: "",
+      iconColor: "#488AFF",
+    }
   }
 };
 

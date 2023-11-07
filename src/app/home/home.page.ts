@@ -1,6 +1,6 @@
-import {Component, OnInit, ElementRef} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {DialogService} from '../core';
-import {BarcodeFormat, BarcodeScanner} from '@capacitor-mlkit/barcode-scanning';
+import {BarcodeScanner} from '@capacitor-mlkit/barcode-scanning';
 import {FilePicker} from '@capawesome/capacitor-file-picker';
 import {AppStorageService} from '../core/services/app-storage/app-storage.service';
 import {Card} from "../core/interface/card";

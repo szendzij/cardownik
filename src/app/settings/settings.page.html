@@ -30,8 +30,24 @@
     <ion-item lines="none">
       <ion-label>
         <ion-text>Uprawnienia do używania aparatu</ion-text>
-        <ion-button expand="block" class="ion-margin-vertical" (click)="requestPermissions()"
-          [disabled]="isPermissionGranted">Nadaj uprawnienia
+        <ion-button expand="block" class="ion-margin-vertical" (click)="requestPermissionsCamera()"
+                    [disabled]="isCameraPermissionGranted">Nadaj uprawnienia
+        </ion-button>
+      </ion-label>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-label>
+        <ion-text>Uprawnienia do powiadomień</ion-text>
+        <ion-button expand="block" class="ion-margin-vertical" (click)="requestPermissionsNotification()"
+                    [disabled]="isNotificationPermissionGranted">Nadaj uprawnienia
+        </ion-button>
+      </ion-label>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-label>
+        <ion-text>Uprawnienia do korzystania z lokalizacji</ion-text>
+        <ion-button expand="block" class="ion-margin-vertical" (click)="requestPermissionsLocalization()"
+                    [disabled]="isGeolocationPermissionGranted">Nadaj uprawnienia
         </ion-button>
       </ion-label>
     </ion-item>
@@ -55,8 +71,10 @@
     <ion-item lines="none">
       <ion-label>
         <ion-text>Zainstaluj Google Lens</ion-text>
-        <ion-button class="ion-margin-vertical" expand="block" (click)="installGoogleBarcodeScannerModule()"
-          [disabled]="!googleLensInstallState">Instaluj</ion-button>
+        <ion-button id="install-google-lens" class="ion-margin-vertical" expand="block"
+                    (click)="installGoogleBarcodeScannerModule()"
+                    [disabled]="!isGoogleLensAvailable">Instaluj
+        </ion-button>
       </ion-label>
     </ion-item>
     <ion-accordion-group>
@@ -67,8 +85,9 @@
         <div class="ion-padding" slot="content">
           <form [formGroup]="formGroup">
             <ion-select (ionChange)="saveBarcodeFormats($event)" label="Formaty kodów kreskowych"
-              label-placement="floating" fill="inline" multiple="true" formControlName="formats" okText="Zapisz"
-              cancelText="Anuluj" class="ion-margin-vertical">
+                        label-placement="floating" fill="inline" multiple="true" formControlName="formats"
+                        okText="Zapisz"
+                        cancelText="Anuluj" class="ion-margin-vertical">
               <ion-select-option [value]="barcodeFormat.Aztec">Aztec</ion-select-option>
               <ion-select-option [value]="barcodeFormat.Codabar">Codabar</ion-select-option>
               <ion-select-option [value]="barcodeFormat.Code39">Code39</ion-select-option>
@@ -88,4 +107,5 @@
       </ion-accordion>
     </ion-accordion-group>
   </ion-item-group>
+  <ion-button (click)="scheduleNotification()">notify</ion-button>
 </ion-content>
