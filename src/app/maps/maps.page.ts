@@ -1,10 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {Geolocation} from "@capacitor/geolocation";
-import {Platform} from '@ionic/angular';
-import {AppStorageService} from "../core/services/app-storage/app-storage.service";
-import {NativeGeocoder} from "@capgo/nativegeocoder";
-import {environment} from "../../environments/environment";
-import {Card} from "../core/interface/card";
+import { Component, OnInit } from '@angular/core';
+import { Geolocation } from "@capacitor/geolocation";
+import { Platform } from '@ionic/angular';
+import { AppStorageService } from "../core/services/app-storage/app-storage.service";
+import { Card } from "../core/interface/card";
 
 @Component({
   selector: 'app-Maps',
@@ -43,6 +41,8 @@ export class MapsPage implements OnInit {
     scrollwheel: false,
   };
 
+  public card: Card;
+
 
   constructor(
     private platform: Platform,
@@ -59,37 +59,29 @@ export class MapsPage implements OnInit {
         lng: position.coords.longitude
       }
     });
+
   }
 
-  async ionViewDidEnter() {
+  async ionViewWillEnter() {
     await this.addMarkers();
   }
 
   async addMarkers() {
     this.markers = await this.appStorageService.get('my-cards').then(async cards => {
-      const markersArray = [];
+      const markersArray: any = [];
       let marker;
       for (let card of cards) {
-        marker = await NativeGeocoder.forwardGeocode({
-          addressString: card.objectLocalization,
-          apiKey: environment.apiKey
-        }).then(location => {
-            return {
-              position: {
-                lat: location.addresses[0].latitude,
-                lng: location.addresses[0].longitude
-              },
-              icon: {
-                url: this.encodeSVG(this.tagSvgRaw(card.cardName)),
-                scaledSize: new google.maps.Size(64, 64),
-              }
-            }
+        marker = {
+          position: {
+            lat: card.objectLocalization.lat,
+            lng: card.objectLocalization.lng,
+          },
+          icon: {
+            url: this.encodeSVG(this.tagSvgRaw(card.cardName)),
+            scaledSize: new google.maps.Size(64, 64),
           }
-        )
-          .catch(error => {
-            console.info("Not found given address");
-          })
-        if (marker !== undefined) {
+        };
+        if (marker.position.lat !== null) {
           markersArray.push(marker);
         }
       }
@@ -98,11 +90,15 @@ export class MapsPage implements OnInit {
   }
 
 
+
   async locate() {
     const geolocation = await Geolocation.getCurrentPosition();
     this.center = {
       lat: geolocation.coords.latitude,
       lng: geolocation.coords.longitude
+    }
+    this.mapOptions = {
+      zoom: this.zoom = 15
     }
   }
 

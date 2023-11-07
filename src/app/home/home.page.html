@@ -24,22 +24,22 @@
                 <ion-label>
                   <ion-text color="medium">Kod kreskowy</ion-text>
                 </ion-label>
-                <br/>
+                <br />
                 <ion-text>
                   <strong class="nowrap-text">{{card.barcode}}</strong>
                 </ion-text>
               </h5>
             </ion-col>
           </ion-row>
-          <ion-row *ngIf="card.objectLocalization" class="list-of-rows">
+          <ion-row *ngIf="card.objectLocalization.loc" class="list-of-rows">
             <ion-col>
               <h5>
                 <ion-label>
                   <ion-text color="medium">Adres obiektu</ion-text>
                 </ion-label>
-                <br/>
+                <br />
                 <ion-text>
-                  <strong class="ion-text-capitalize nowrap-text">{{card.objectLocalization}}</strong>
+                  <strong class="ion-text-capitalize nowrap-text">{{card.objectLocalization.loc}}</strong>
                 </ion-text>
               </h5>
             </ion-col>
@@ -48,8 +48,8 @@
         <ion-col size="4" class="ion-justify-content-center ion-align-items-center" style="display: flex">
           <ion-row class="qrcodeImage">
             <qrcode [qrdata]="card.barcode || ''" [allowEmptyString]="true" [cssClass]="'qrcode'"
-                    [colorDark]="'#0c0c0c'" [colorLight]="'#ffffff'" [elementType]="'svg'" [errorCorrectionLevel]="'M'"
-                    [margin]="2" [width]="this.screenWidth / 4.5"></qrcode>
+              [colorDark]="'#0c0c0c'" [colorLight]="'#ffffff'" [elementType]="'svg'" [errorCorrectionLevel]="'M'"
+              [margin]="2" [width]="this.screenWidth / 4.5"></qrcode>
           </ion-row>
         </ion-col>
       </ion-row>

@@ -1,11 +1,11 @@
-import {Component, Input, OnInit, Output} from '@angular/core';
-import {DialogService} from "../core";
-import {AppStorageService} from "../core/services/app-storage/app-storage.service";
-import {Card} from "../core/interface/card";
-import {ModalController, Platform} from "@ionic/angular";
-import {AddCardsFormComponent} from "../add-cards-form/add-cards-form.component";
-import {NativeGeocoder} from '@capgo/nativegeocoder';
-import {environment} from 'src/environments/environment';
+import { Component, Input, OnInit, Output } from '@angular/core';
+import { DialogService } from "../core";
+import { AppStorageService } from "../core/services/app-storage/app-storage.service";
+import { Card } from "../core/interface/card";
+import { ModalController, Platform } from "@ionic/angular";
+import { AddCardsFormComponent } from "../add-cards-form/add-cards-form.component";
+import { NativeGeocoder } from '@capgo/nativegeocoder';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'details-card-view-component',
@@ -22,6 +22,7 @@ export class DetailsCardViewComponent implements OnInit {
   public markerPosition: google.maps.LatLngLiteral;
   public markerOptions: google.maps.MarkerOptions = {
     draggable: false,
+    animation: google.maps.Animation.DROP
   }
   public options: google.maps.MapOptions = {
     zoom: 15,
@@ -34,7 +35,7 @@ export class DetailsCardViewComponent implements OnInit {
   public cards: Card[] = [];
 
   @Input()
-  public card: any;
+  public card: Card;
 
   constructor(
     private readonly dialogService: DialogService,
@@ -44,7 +45,6 @@ export class DetailsCardViewComponent implements OnInit {
   }
 
   async ngOnInit() {
-    await this.geocoding(this.card.objectLocalization);
     this.screenWidth = this.platform.width();
     this.screenHeight = this.platform.height();
     this.platform.backButton.subscribeWithPriority(999, async () => {
@@ -54,17 +54,24 @@ export class DetailsCardViewComponent implements OnInit {
         return await modal.dismiss(this.cards, 'back');
       }
     })
+    this.center = {
+      lat: this.card.objectLocalization.lat,
+      lng: this.card.objectLocalization.lng
+    }
+    this.markerPosition = {
+      lat: this.card.objectLocalization.lat,
+      lng: this.card.objectLocalization.lng
+    }
   }
 
   async editCard() {
     const cardDetail = await this.dialogService.showModal({
       component: AddCardsFormComponent,
-      componentProps: {card: this.card}
+      componentProps: { card: this.card }
     })
-    const {data, role} = await cardDetail.onWillDismiss();
+    const { data, role } = await cardDetail.onWillDismiss();
     if (role == 'confirm') {
       this.card = data.value;
-      await this.geocoding(this.card.objectLocalization)
       let arrayOfCards = await this.appStorageService.get('my-cards');
       const cardIndex = arrayOfCards.findIndex((v: { id: number; }) => v.id === data.value.id);
       arrayOfCards[cardIndex] = data.value;
@@ -86,31 +93,6 @@ export class DetailsCardViewComponent implements OnInit {
   async back() {
     this.cards = await this.appStorageService.get('my-cards');
     return this.dialogService.dismissModal(this.cards, 'back');
-  }
-
-
-  async geocoding(localization: string) {
-    await NativeGeocoder.forwardGeocode({
-      addressString: localization,
-      apiKey: environment.apiKey
-    }).then(location => {
-      this.isLocationFound = true;
-      this.markerOptions = {
-        animation: google.maps.Animation.DROP
-      }
-      this.center = {
-        lat: location.addresses[0].latitude,
-        lng: location.addresses[0].longitude
-      }
-      this.markerPosition = {
-        lat: location.addresses[0].latitude,
-        lng: location.addresses[0].longitude,
-      }
-    })
-      .catch(error => {
-        this.isLocationFound = false;
-        console.info("Not found given address");
-      })
   }
 
 }

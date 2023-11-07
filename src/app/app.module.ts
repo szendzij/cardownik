@@ -5,11 +5,11 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { IonicStorageModule } from '@ionic/storage-angular';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { GlobalErrorHandlerService } from './core';
 import { AddCardsFormComponentModule } from "./add-cards-form/add-cards-form-component.module";
-import {QRCodeModule} from "angularx-qrcode";
-import {DetailsCardViewComponentModule} from "./details-card-view/details-card-view-component.module";
+import { QRCodeModule } from "angularx-qrcode";
+import { DetailsCardViewComponentModule } from "./details-card-view/details-card-view-component.module";
 
 
 @NgModule({
@@ -22,7 +22,6 @@ import {DetailsCardViewComponentModule} from "./details-card-view/details-card-v
     AddCardsFormComponentModule,
     DetailsCardViewComponentModule,
     IonicStorageModule.forRoot(),
-    FormsModule,
     ReactiveFormsModule],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

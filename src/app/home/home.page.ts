@@ -7,7 +7,6 @@ import { Card } from "../core/interface/card";
 import { AddCardsFormComponent } from "../add-cards-form/add-cards-form.component";
 import { DetailsCardViewComponent } from "../details-card-view/details-card-view.component";
 import { Platform } from "@ionic/angular";
-import { Geolocation } from "@capacitor/geolocation";
 
 @Component({
   selector: 'app-home',
@@ -92,10 +91,15 @@ export class HomePage implements OnInit {
       this.cards.unshift({
         id: this._id,
         cardName: data.value.cardName,
-        objectLocalization: data.value.objectLocalization,
+        objectLocalization: {
+          loc: data.value.objectLocalization.loc,
+          lat: data.value.objectLocalization.lat,
+          lng: data.value.objectLocalization.lng
+        },
         modified: data.value.modified,
         barcode: data.value.barcode
       })
+
       this._id++;
       await this.appStorageService.set('id', this._id);
       await this.appStorageService.set('my-cards', this.cards);

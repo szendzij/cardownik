@@ -34,24 +34,21 @@
             </ion-text>
           </h1>
         </div>
-        <div [hidden]="!this.card.objectLocalization" class="ion-margin">
+        <div *ngIf="this.card.objectLocalization.loc !== ''" class="ion-margin">
           <h1>
             <ion-label>
               <ion-text color="medium">Adres obiektu</ion-text>
             </ion-label>
             <br />
             <ion-text>
-              <strong>{{this.card.objectLocalization}}</strong>
+              <strong>{{this.card.objectLocalization.loc}}</strong>
             </ion-text>
           </h1>
           <br>
-          <div class="google-map" *ngIf="isLocationFound">
+          <div class="google-map">
             <google-map [options]="options" [height]="screenHeight / 5" width="auto" [center]="center">
 
-              <map-marker
-                [position]="markerPosition"
-                [options]="markerOptions"
-              ></map-marker>
+              <map-marker [position]="markerPosition" [options]="markerOptions"></map-marker>
 
             </google-map>
           </div>

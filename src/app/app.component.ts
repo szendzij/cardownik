@@ -9,7 +9,6 @@ import { FormGroup } from "@angular/forms";
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  private readonly ngZone: NgZone;
 
   constructor(private appStorageService: AppStorageService) {
 
@@ -40,25 +39,5 @@ export class AppComponent implements OnInit {
         return "denied";
       });
     await this.appStorageService.set('permissionGranted', checkPermissions);
-
-    // BarcodeScanner.removeAllListeners().then(() => {
-    //   BarcodeScanner.addListener(
-    //     'googleBarcodeScannerModuleInstallProgress',
-    //     (event) => {
-    //       this.ngZone.run(() => {
-    //         const { state, progress } = event;
-    //         // this.formGroup.patchValue({
-    //         //   googleBarcodeScannerModuleInstallState: state,
-    //         //   googleBarcodeScannerModuleInstallProgress: progress,
-    //         // });
-
-
-    //         this.appStorageService.set('googleBarcodeScannerModuleInstallState', state);
-    //         console.log(state)
-    //         console.log(progress)
-    //       });
-    //     }
-    //   );
-    // });
   }
 }
