@@ -26,6 +26,7 @@ export class GlobalErrorHandlerService {
   private getMessageFromUnknownError(error: unknown): string {
     let message = 'Wystąpił niespodziewany błąd aplikacji';
     if (error instanceof Object && 'rejection' in error) {
+      console.error(error)
       error = (error as any).rejection;
     }
     if (error instanceof Error && error.message) {

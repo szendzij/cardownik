@@ -9,7 +9,7 @@
 
 <ion-content>
   <div class="container">
-    <google-map [height]="screenHeight * 0.85" width="auto" [zoom]="zoom" [center]="center" [options]="mapOptions">
+    <google-map [height]="screenHeight" width="auto" [zoom]="zoom" [center]="center" [options]="mapOptions">
 
       <map-marker *ngFor="let marker of markers" [position]="marker.position" [title]="marker.title"
         [icon]="marker.icon.url"></map-marker>

@@ -1,12 +1,12 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
-import { DialogService } from '../core';
-import { BarcodeFormat, BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
-import { FilePicker } from '@capawesome/capacitor-file-picker';
-import { AppStorageService } from '../core/services/app-storage/app-storage.service';
-import { Card } from "../core/interface/card";
-import { AddCardsFormComponent } from "../add-cards-form/add-cards-form.component";
-import { DetailsCardViewComponent } from "../details-card-view/details-card-view.component";
-import { Platform } from "@ionic/angular";
+import {Component, OnInit, ElementRef} from '@angular/core';
+import {DialogService} from '../core';
+import {BarcodeFormat, BarcodeScanner} from '@capacitor-mlkit/barcode-scanning';
+import {FilePicker} from '@capawesome/capacitor-file-picker';
+import {AppStorageService} from '../core/services/app-storage/app-storage.service';
+import {Card} from "../core/interface/card";
+import {AddCardsFormComponent} from "../add-cards-form/add-cards-form.component";
+import {DetailsCardViewComponent} from "../details-card-view/details-card-view.component";
+import {Platform} from "@ionic/angular";
 
 @Component({
   selector: 'app-home',
@@ -38,7 +38,7 @@ export class HomePage implements OnInit {
   }
 
   public async readBarcodeFromImage(): Promise<void> {
-    const { files } = await FilePicker.pickImages({ multiple: false });
+    const {files} = await FilePicker.pickImages({multiple: false});
     const path = files[0]?.path;
     if (!path) {
       return;
@@ -70,10 +70,6 @@ export class HomePage implements OnInit {
       formats
     })
       .then(async result => {
-        //to check
-        // const found = formats.find((el: BarcodeFormat) => el === result.barcodes[0].format)
-        // await this.dialogService.showErrorAlert({ message: 'znaleziono format' })
-
         this.barcode = result.barcodes[0].displayValue;
         await this.showAddCardForm();
       })
@@ -85,9 +81,9 @@ export class HomePage implements OnInit {
   async showAddCardForm() {
     const formElement = await this.dialogService.showModal({
       component: AddCardsFormComponent,
-      componentProps: { barcode: this.barcode }
+      componentProps: {barcode: this.barcode}
     })
-    const { data, role } = await formElement.onWillDismiss();
+    const {data, role} = await formElement.onWillDismiss();
     if (role == 'confirm') {
       this.cards.unshift({
         id: this._id,
@@ -115,9 +111,9 @@ export class HomePage implements OnInit {
     if (cardObject) {
       const cardDetail = await this.dialogService.showModal({
         component: DetailsCardViewComponent,
-        componentProps: { card: cardObject }
+        componentProps: {card: cardObject}
       })
-      const { data, role } = await cardDetail.onWillDismiss();
+      const {data, role} = await cardDetail.onWillDismiss();
       if (role == 'delete') {
         this.cards = data;
       } else if (role == 'confirm') {
@@ -126,7 +122,7 @@ export class HomePage implements OnInit {
         this.cards = data;
       }
     } else {
-      await this.dialogService.showErrorAlert({ message: 'Wystąpił problem z otwarciem szczegółów karty' })
+      await this.dialogService.showErrorAlert({message: 'Wystąpił problem z otwarciem szczegółów karty'})
     }
   }
 

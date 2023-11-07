@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { Geolocation } from "@capacitor/geolocation";
-import { Platform } from '@ionic/angular';
-import { AppStorageService } from "../core/services/app-storage/app-storage.service";
-import { Card } from "../core/interface/card";
+import {Component, OnInit} from '@angular/core';
+import {Geolocation} from "@capacitor/geolocation";
+import {Platform} from '@ionic/angular';
+import {AppStorageService} from "../core/services/app-storage/app-storage.service";
+import {Card} from "../core/interface/card";
 
 @Component({
   selector: 'app-Maps',
@@ -19,6 +19,7 @@ export class MapsPage implements OnInit {
   public markers: any[];
   public markerPosition: google.maps.LatLngLiteral;
   public center: google.maps.LatLngLiteral;
+  public markerOptions: google.maps.MarkerOptions;
 
   public tagSvgRaw = (name: string) => `
     <svg xmlns="http://www.w3.org/2000/svg" width="71" height="45" viewBox="0 0 71 45" fill="none">
@@ -59,36 +60,41 @@ export class MapsPage implements OnInit {
         lng: position.coords.longitude
       }
     });
-
+    // console.log(this.markers.length)
   }
 
   async ionViewWillEnter() {
     await this.addMarkers();
+    // this.markerOptions = {
+    //   animation: google.maps.Animation.DROP
+    // }
   }
 
   async addMarkers() {
     this.markers = await this.appStorageService.get('my-cards').then(async cards => {
       const markersArray: any = [];
       let marker;
-      for (let card of cards) {
-        marker = {
-          position: {
-            lat: card.objectLocalization.lat,
-            lng: card.objectLocalization.lng,
-          },
-          icon: {
-            url: this.encodeSVG(this.tagSvgRaw(card.cardName)),
-            scaledSize: new google.maps.Size(64, 64),
+      if (cards !== null) {
+        for (let card of cards) {
+          marker = {
+            position: {
+              lat: card.objectLocalization.lat,
+              lng: card.objectLocalization.lng,
+            },
+            icon: {
+              url: this.encodeSVG(this.tagSvgRaw(card.cardName)),
+              scaledSize: new google.maps.Size(64, 64),
+            }
+          };
+          if (marker.position.lat !== null) {
+            markersArray.push(marker);
           }
-        };
-        if (marker.position.lat !== null) {
-          markersArray.push(marker);
         }
       }
       return markersArray;
     });
-  }
 
+  }
 
 
   async locate() {
