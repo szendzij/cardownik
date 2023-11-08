@@ -1,8 +1,8 @@
-import {Component, NgZone, OnInit} from '@angular/core';
-import {AppStorageService} from './core/services/app-storage/app-storage.service';
-import {BarcodeScanner} from "@capacitor-mlkit/barcode-scanning";
-import {LocalNotifications} from "@capacitor/local-notifications";
-import {Geolocation} from "@capacitor/geolocation";
+import { Component, NgZone, OnInit } from '@angular/core';
+import { AppStorageService } from './core/services/app-storage/app-storage.service';
+import { BarcodeScanner } from "@capacitor-mlkit/barcode-scanning";
+import { LocalNotifications } from "@capacitor/local-notifications";
+import { Geolocation } from "@capacitor/geolocation";
 
 @Component({
   selector: 'app-root',
@@ -21,15 +21,15 @@ export class AppComponent implements OnInit {
     const isGoogleBarcodeScannerModuleAvailable = BarcodeScanner.isGoogleBarcodeScannerModuleAvailable()
       .then(r => r.available)
       .catch(error => {
-        console.log(error);
+        console.error(error);
         return false;
       });
-    await this.appStorageService.set('googleBarcodeScannerModule', isGoogleBarcodeScannerModuleAvailable);
+    await this.appStorageService.set('googleBarcodeScannerModuleAvailability', isGoogleBarcodeScannerModuleAvailable);
 
     const isSupported = BarcodeScanner.isSupported()
       .then(r => r.supported)
       .catch(error => {
-        console.log(error);
+        console.error(error);
         return false;
       });
     await this.appStorageService.set('supportedDevice', isSupported);
@@ -37,7 +37,7 @@ export class AppComponent implements OnInit {
     const checkPermissionsCamera = BarcodeScanner.checkPermissions()
       .then(r => r.camera === 'granted')
       .catch(error => {
-        console.log(error);
+        console.error(error);
         return "denied";
       });
     await this.appStorageService.set('cameraPermission', checkPermissionsCamera);
@@ -59,14 +59,14 @@ export class AppComponent implements OnInit {
       });
     await this.appStorageService.set('geolocationPermission', checkPermissionsGeolocation);
 
-    // const installGoogleBarcodeScannerModuleStatus = await BarcodeScanner.installGoogleBarcodeScannerModule()
-    //   .then(result => {
-    //     console.log(result)
-    //   })
-    //   .catch(error => {
-    //     console.log(error);
-    //   });
-    // console.log(installGoogleBarcodeScannerModuleStatus)
+    const installGoogleBarcodeScannerModuleStatus = await BarcodeScanner.installGoogleBarcodeScannerModule()
+      .then(result => {
+        console.log(result)
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    console.log(installGoogleBarcodeScannerModuleStatus)
 
   }
 }

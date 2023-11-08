@@ -1,13 +1,13 @@
-import {Component, OnInit} from '@angular/core';
-import {AppStorageService} from '../core/services/app-storage/app-storage.service';
+import { Component, OnInit } from '@angular/core';
+import { AppStorageService } from '../core/services/app-storage/app-storage.service';
 import {
   BarcodeFormat,
   BarcodeScanner
 } from '@capacitor-mlkit/barcode-scanning';
-import {FormGroup, FormControl} from '@angular/forms';
-import {DialogService} from '../core';
-import {LocalNotifications, ScheduleOptions} from "@capacitor/local-notifications";
-import {Geolocation} from '@capacitor/geolocation';
+import { FormGroup, FormControl } from '@angular/forms';
+import { DialogService } from '../core';
+import { LocalNotifications, ScheduleOptions } from "@capacitor/local-notifications";
+import { Geolocation } from '@capacitor/geolocation';
 
 
 @Component({
@@ -40,12 +40,12 @@ export class SettingsPage implements OnInit {
   async ngOnInit(): Promise<void> {
     this.darkMode = await this.appStorageService.get('darkModeActivated');
     this.barcodeFormatValues = await this.appStorageService.get('barcodeFormats');
-    this.formGroup.patchValue({formats: this.barcodeFormatValues})
+    this.formGroup.patchValue({ formats: this.barcodeFormatValues })
     this.isSupportedDevice = await this.appStorageService.get('supportedDevice')
     this.isCameraPermissionGranted = await this.appStorageService.get('cameraPermission');
     this.isGeolocationPermissionGranted = await this.appStorageService.get('geolocationPermission');
     this.isNotificationPermissionGranted = await this.appStorageService.get('notificationPermission');
-    this.isGoogleLensAvailable = await this.isGoogleBarcodeScannerModuleAvailable();
+    this.isGoogleLensAvailable = await this.appStorageService.get('googleBarcodeScannerModuleAvailability');
   }
 
   toggleDarkMode() {
