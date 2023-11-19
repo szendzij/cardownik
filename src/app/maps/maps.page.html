@@ -1,29 +1,46 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Mapa zapisanych kart
-    </ion-title>
+    <ion-title> Mapa zapisanych kart </ion-title>
   </ion-toolbar>
 </ion-header>
 
-
 <ion-content>
   <div class="container">
-    <google-map [height]="screenHeight" width="auto" [zoom]="zoom" [center]="center" [options]="mapOptions">
-
-      <map-marker *ngFor="let marker of markers" [position]="marker.position" [title]="marker.title"
-        [icon]="marker.icon.url"></map-marker>
-
+    <google-map
+      id="map"
+      [height]="screenHeight"
+      width="auto"
+      [zoom]="zoom"
+      [center]="center"
+      [options]="mapOptions"
+    >
+      <map-marker [options]="markerOptions"></map-marker>
+      <map-marker
+        *ngFor="let marker of markers"
+        [position]="marker.position"
+        [title]="marker.title"
+        [icon]="marker.icon.url"
+      ></map-marker>
     </google-map>
   </div>
 
   <ion-fab-button class="fab-position_locate" size="small" (click)="locate()">
     <ion-icon name="locate-outline"></ion-icon>
   </ion-fab-button>
-  <ion-fab-button class="fab-position_zoomOut" size="small" aria-label="add manually" (click)="zoomOut()">
+  <ion-fab-button
+    class="fab-position_zoomOut"
+    size="small"
+    aria-label="add manually"
+    (click)="zoomOut()"
+  >
     <ion-icon name="remove-outline"></ion-icon>
   </ion-fab-button>
-  <ion-fab-button class="fab-position_zoomIn" size="small" aria-label="scan from image" (click)="zoomIn()">
+  <ion-fab-button
+    class="fab-position_zoomIn"
+    size="small"
+    aria-label="scan from image"
+    (click)="zoomIn()"
+  >
     <ion-icon name="add-outline"></ion-icon>
   </ion-fab-button>
 </ion-content>

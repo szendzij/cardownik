@@ -9,6 +9,7 @@ android {
 
 apply from: "../capacitor-cordova-android-plugins/cordova.variables.gradle"
 dependencies {
+    implementation project(':capacitor-community-background-geolocation')
     implementation project(':capacitor-mlkit-barcode-scanning')
     implementation project(':capacitor-app')
     implementation project(':capacitor-geolocation')
@@ -16,6 +17,7 @@ dependencies {
     implementation project(':capacitor-keyboard')
     implementation project(':capacitor-local-notifications')
     implementation project(':capacitor-preferences')
+    implementation project(':capacitor-splash-screen')
     implementation project(':capacitor-status-bar')
     implementation project(':capawesome-capacitor-file-picker')
     implementation project(':capgo-nativegeocoder')

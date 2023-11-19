@@ -15,9 +15,17 @@
       <ion-col>
         <div class="ion-margin-horizontal">
           <div class="qrcodeImage content-center">
-            <qrcode [qrdata]="this.card.barcode || ''" [allowEmptyString]="true" [cssClass]="'qrcode'"
-              [colorDark]="'#0c0c0c'" [colorLight]="'#ffffff'" [elementType]="'svg'" [errorCorrectionLevel]="'M'"
-              [margin]="2" [width]="this.screenWidth / 1.2"></qrcode>
+            <qrcode
+              [qrdata]="this.card.barcode || ''"
+              [allowEmptyString]="true"
+              [cssClass]="'qrcode'"
+              [colorDark]="'#0c0c0c'"
+              [colorLight]="'#ffffff'"
+              [elementType]="'svg'"
+              [errorCorrectionLevel]="'M'"
+              [margin]="2"
+              [width]="this.screenWidth / 1.2"
+            ></qrcode>
             <ion-text class="ion-margin">
               <strong class="nowrap-text">{{this.card.barcode}}</strong>
             </ion-text>
@@ -34,7 +42,10 @@
             </ion-text>
           </h1>
         </div>
-        <div *ngIf="this.card.objectLocalization.loc !== ''" class="ion-margin">
+        <div
+          *ngIf="this.card.objectLocalization.loc !== null"
+          class="ion-margin"
+        >
           <h1>
             <ion-label>
               <ion-text color="medium">Adres obiektu</ion-text>
@@ -44,12 +55,18 @@
               <strong>{{this.card.objectLocalization.loc}}</strong>
             </ion-text>
           </h1>
-          <br>
-          <div class="google-map">
-            <google-map [options]="options" [height]="screenHeight / 5" width="auto" [center]="center">
-
-              <map-marker [position]="markerPosition" [options]="markerOptions"></map-marker>
-
+          <br />
+          <div class="google-mapio">
+            <google-map
+              [options]="options"
+              [height]="screenHeight / 5"
+              width="auto"
+              [center]="center"
+            >
+              <map-marker
+                [position]="markerPosition"
+                [options]="markerOptions"
+              ></map-marker>
             </google-map>
           </div>
         </div>

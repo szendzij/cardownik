@@ -50,8 +50,8 @@ ion-item {
   --ion-border-color: var(--ion-color-medium-shade);
 }
 
-
-.qrcode svg {
+.qrcode svg,
+.qrcode canvas {
   border-radius: 10% 10% 10% 10% / 10% 10% 10% 10%;
   filter: drop-shadow(0px 0px 5px var(--ion-color-primary));
 }

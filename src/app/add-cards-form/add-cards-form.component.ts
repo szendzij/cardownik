@@ -1,41 +1,54 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from "@angular/core";
 import { DialogService } from "../core";
-import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from "@angular/forms";
 import { Card } from "../core/interface/card";
 import { AppStorageService } from "../core/services/app-storage/app-storage.service";
-import { NativeGeocoder } from '@capgo/nativegeocoder';
-import { environment } from 'src/environments/environment';
+import { NativeGeocoder } from "@capgo/nativegeocoder";
+import { environment } from "src/environments/environment";
+import { BarcodeScanner } from "@capacitor-mlkit/barcode-scanning";
 
 @Component({
-  selector: 'add-cards-form-component',
-  templateUrl: './add-cards-form-component.html',
-  styleUrls: ['./add-cards-form.component.scss'],
+  selector: "add-cards-form-component",
+  templateUrl: "./add-cards-form-component.html",
+  styleUrls: ["./add-cards-form.component.scss"],
 })
 export class AddCardsFormComponent implements OnInit {
   @Input()
-  public barcode: string = '';
+  public barcode: string = "";
   public latitude: number;
   public longitude: number;
   public _id: number = 0;
   public cardForm: FormGroup;
-
 
   @Input()
   public card: Card;
 
   constructor(
     private readonly dialogService: DialogService,
-    public formBuilder: FormBuilder) {
+    private appStorageService: AppStorageService,
+    public formBuilder: FormBuilder
+  ) {
     this.cardForm = this.formBuilder.group({
       id: [],
-      cardName: ['', [Validators.required, Validators.minLength(2)]],
-      barcode: ['', [Validators.required, Validators.minLength(2)]],
+      cardName: ["", [Validators.required, Validators.minLength(2)]],
+      barcode: ["", [Validators.required, Validators.minLength(2)]],
       objectLocalization: this.formBuilder.group({
-        loc: [''],
+        loc: [""],
         lat: [],
-        lng: []
+        lng: [],
       }),
-      modified: [new Date().toLocaleString("pl-PL")]
+      modified: [new Date().toLocaleString("pl-PL")],
     });
   }
 
@@ -43,8 +56,8 @@ export class AddCardsFormComponent implements OnInit {
     if (this.card == undefined) {
       this.cardForm.patchValue({
         id: this._id,
-        barcode: this.barcode
-      })
+        barcode: this.barcode,
+      });
     } else {
       this.cardForm.patchValue({
         id: this.card.id,
@@ -52,35 +65,54 @@ export class AddCardsFormComponent implements OnInit {
         cardName: this.card.cardName,
         objectLocalization: {
           loc: this.card.objectLocalization.loc,
-        }
-      })
+        },
+      });
     }
   }
 
+  public async scan(): Promise<void> {
+    const formats = await this.appStorageService.get("barcodeFormats");
+    BarcodeScanner.scan({
+      formats,
+    })
+      .then(async (result) => {
+        this.cardForm.patchValue({ barcode: result.barcodes[0].displayValue });
+      })
+      .catch((error) => {
+        console.log("Error", error);
+      });
+  }
+
   cancel() {
-    return this.dialogService.dismissModal(null, 'cancel');
+    return this.dialogService.dismissModal(null, "cancel");
   }
 
   async confirm() {
-    const locationObject = this.cardForm.controls['objectLocalization'].value;
+    const locationObject = this.cardForm.controls["objectLocalization"].value;
     await NativeGeocoder.forwardGeocode({
       addressString: locationObject.loc,
-      apiKey: environment.apiKey
-    }).then(location => {
-      this.cardForm.patchValue({
-        objectLocalization: {
-          lat: location.addresses[0].latitude,
-          lng: location.addresses[0].longitude
+      apiKey: environment.apiKey,
+    })
+      .then((location) => {
+        this.cardForm.patchValue({
+          objectLocalization: {
+            lat: location.addresses[0].latitude,
+            lng: location.addresses[0].longitude,
+          },
+        });
+        if (this.cardForm.valid) {
+          console.log(this.cardForm);
+          return this.dialogService.dismissModal(this.cardForm, "confirm");
         }
       })
-      if (this.cardForm.valid) {
-        console.log(this.cardForm)
-        return this.dialogService.dismissModal(this.cardForm, 'confirm');
-      }
-    })
-      .catch(error => {
+      .catch((error) => {
         console.info("Not found given address");
-        return this.dialogService.dismissModal(this.cardForm, 'confirm');
-      })
+        this.cardForm.patchValue({
+          objectLocalization: {
+            loc: null,
+          },
+        });
+        return this.dialogService.dismissModal(this.cardForm, "confirm");
+      });
   }
 }
