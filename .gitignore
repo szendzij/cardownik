@@ -69,5 +69,3 @@ Thumbs.db
 src/environments/environment.ts
 src/index.html
 src/environments/environment.prod.ts
-src/environments/environment.ts
-src/environments/environment.prod.ts
