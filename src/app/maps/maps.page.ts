@@ -60,15 +60,7 @@ export class MapsPage implements OnInit {
       mapProperties
     );
   }
-
-  // ionViewWillEnter(){
-  //   this.initMap();
-  // }
-
   async ngOnInit() {
-    // const map = new google.maps.Map(
-    // document.getElementById('map') as HTMLElement);
-
     const location = await Geolocation.getCurrentPosition({
       enableHighAccuracy: true,
     });

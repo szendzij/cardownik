@@ -1,17 +1,6 @@
-import {
-  Component,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-} from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { DialogService } from "../core";
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from "@angular/forms";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Card } from "../core/interface/card";
 import { AppStorageService } from "../core/services/app-storage/app-storage.service";
 import { NativeGeocoder } from "@capgo/nativegeocoder";

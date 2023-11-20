@@ -146,43 +146,6 @@ export class SettingsPage implements OnInit {
       : await this.stopLocationWatcher();
   }
 
-  // async startLocationWatcher_2() {
-  //   const cards = await this.appStorageService.get("my-cards");
-
-  //   let watch = await Geolocation.watchPosition(
-  //     { timeout: 120000 },
-  //     async (position, err) => {
-  //       if (position) {
-  //         console.info("Geolocation beeing watched");
-  //         let resultOfDistance;
-  //         for (let card of cards) {
-  //           resultOfDistance = this.calculateDistance(
-  //             card.objectLocalization.lat,
-  //             card.objectLocalization.lng,
-  //             position.coords.latitude,
-  //             position.coords.longitude
-  //           );
-  //           console.log(resultOfDistance);
-  //           if (resultOfDistance >= 150) {
-  //             this.scheduleNotification(card.cardName);
-  //           }
-  //         }
-  //       } else {
-  //         console.error("Error with watchPosition(): ", err);
-  //       }
-  //     }
-  //   );
-  //   this.watchId = watch;
-  // }
-
-  // async stopLocationWatcher_2() {
-  //   console.log(this.watchId);
-  //   const opt: ClearWatchOptions = { id: this.watchId };
-  //   await Geolocation.clearWatch(opt).then((r) =>
-  //     console.log("My watch has been ended")
-  //   );
-  // }
-
   async scheduleNotification(cardName: string) {
     let options: ScheduleOptions = {
       notifications: [
