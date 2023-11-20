@@ -50,6 +50,9 @@ export class DetailsCardViewComponent implements OnInit {
         return await modal.dismiss(this.cards, "back");
       }
     });
+  }
+
+  ionViewWillEnter() {
     this.center = {
       lat: this.card.objectLocalization.lat,
       lng: this.card.objectLocalization.lng,

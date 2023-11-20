@@ -24,14 +24,11 @@ import { BarcodeScanner } from "@capacitor-mlkit/barcode-scanning";
   styleUrls: ["./add-cards-form.component.scss"],
 })
 export class AddCardsFormComponent implements OnInit {
-  @Input()
   public barcode: string = "";
   public latitude: number;
   public longitude: number;
   public _id: number = 0;
   public cardForm: FormGroup;
-
-  @Input()
   public card: Card;
 
   constructor(

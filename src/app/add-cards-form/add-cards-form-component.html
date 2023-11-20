@@ -49,19 +49,19 @@
             </ion-item>
           </ion-col>
           <ion-col size="2">
-            <ion-button fill="clear" (click)="scan()">
-              <div class="qrcodeImage content-center">
+            <ion-button fill="clear" (click)="scan()" class="scan-again">
+              <div class="qrcodeImage">
                 <qrcode
                   [qrdata]="this.cardForm.controls['barcode'].value || ''"
                   [allowEmptyString]="true"
                   [cssClass]="'qrcode'"
                   [elementType]="'canvas'"
                   [imageSrc]="'./assets/barcode.png'"
-                  [imageHeight]="35"
-                  [imageWidth]="35"
+                  [imageHeight]="30"
+                  [imageWidth]="30"
                   [errorCorrectionLevel]="'M'"
                   [margin]="2"
-                  [width]="52"
+                  [width]="35"
                 ></qrcode>
               </div>
             </ion-button>

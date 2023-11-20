@@ -12,6 +12,12 @@ import {
 } from "@capacitor/local-notifications";
 import { ClearWatchOptions, Geolocation } from "@capacitor/geolocation";
 
+import { BackgroundGeolocationPlugin } from "@capacitor-community/background-geolocation";
+import { registerPlugin } from "@capacitor/core";
+const BackgroundGeolocation = registerPlugin<BackgroundGeolocationPlugin>(
+  "BackgroundGeolocation"
+);
+
 @Component({
   selector: "app-settings",
   templateUrl: "settings.page.html",
@@ -29,6 +35,7 @@ export class SettingsPage implements OnInit {
   public isGoogleLensAvailable: boolean = false;
   public readonly barcodeFormat = BarcodeFormat;
   public watchId: any;
+  public backgroundWatchId: any;
 
   public formGroup = new FormGroup({
     formats: new FormControl(),
@@ -133,55 +140,56 @@ export class SettingsPage implements OnInit {
     });
   }
   async toggleLocalizationWatcher(event: any) {
-    console.log(event);
-    event
-      ? await this.stopLocationWatcher()
-      : await this.startLocationWatcher();
+    console.log(event.detail.checked);
+    event.detail.checked
+      ? await this.startLocationWatcher()
+      : await this.stopLocationWatcher();
   }
 
-  async startLocationWatcher() {
-    const cards = await this.appStorageService.get("my-cards");
-    let watch = navigator.geolocation.watchPosition(
-      (position) => {
-        if (position) {
-          console.log(position);
-          let resultOfDistance;
-          for (let card of cards) {
-            resultOfDistance = this.calculateDistance(
-              card.objectLocalization.lat,
-              card.objectLocalization.lng,
-              position.coords.latitude,
-              position.coords.longitude
-            );
-            console.log(resultOfDistance);
-            if (resultOfDistance >= 150) {
-            }
-          }
-        }
-      },
-      (error) => {
-        console.error("Error with watchPosition(): ", error);
-      },
-      { timeout: 1500, maximumAge: 50, enableHighAccuracy: true }
-    );
-    this.watchId = watch;
-  }
+  // async startLocationWatcher_2() {
+  //   const cards = await this.appStorageService.get("my-cards");
 
-  async stopLocationWatcher() {
-    console.log(this.watchId);
-    const opt: ClearWatchOptions = { id: this.watchId };
-    await Geolocation.clearWatch(opt).then((r) =>
-      console.log("My watch has been ended")
-    );
-  }
+  //   let watch = await Geolocation.watchPosition(
+  //     { timeout: 120000 },
+  //     async (position, err) => {
+  //       if (position) {
+  //         console.info("Geolocation beeing watched");
+  //         let resultOfDistance;
+  //         for (let card of cards) {
+  //           resultOfDistance = this.calculateDistance(
+  //             card.objectLocalization.lat,
+  //             card.objectLocalization.lng,
+  //             position.coords.latitude,
+  //             position.coords.longitude
+  //           );
+  //           console.log(resultOfDistance);
+  //           if (resultOfDistance >= 150) {
+  //             this.scheduleNotification(card.cardName);
+  //           }
+  //         }
+  //       } else {
+  //         console.error("Error with watchPosition(): ", err);
+  //       }
+  //     }
+  //   );
+  //   this.watchId = watch;
+  // }
 
-  async scheduleNotification() {
+  // async stopLocationWatcher_2() {
+  //   console.log(this.watchId);
+  //   const opt: ClearWatchOptions = { id: this.watchId };
+  //   await Geolocation.clearWatch(opt).then((r) =>
+  //     console.log("My watch has been ended")
+  //   );
+  // }
+
+  async scheduleNotification(cardName: string) {
     let options: ScheduleOptions = {
       notifications: [
         {
           id: 1,
           title: "Cardownik",
-          body: "Znajdujesz sie w okolicy zapisanej karty :)",
+          body: `Znajdujesz sie w okolicy ${cardName} :)`,
         },
       ],
     };
@@ -192,7 +200,7 @@ export class SettingsPage implements OnInit {
     }
   }
 
-  calculateDistance(
+  private calculateDistance(
     lat1: number,
     lon1: number,
     lat2: number,
@@ -212,5 +220,46 @@ export class SettingsPage implements OnInit {
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const earthRadius = 6371000;
     return earthRadius * c;
+  }
+
+  async startLocationWatcher() {
+    const cards = await this.appStorageService.get("my-cards");
+    let watch = await BackgroundGeolocation.addWatcher(
+      {
+        backgroundMessage: "Włączono śledzenie lokalizacji w tle",
+        backgroundTitle: "Śledzenie w tle",
+        requestPermissions: true,
+        stale: false,
+        distanceFilter: 50,
+      },
+      (position, err) => {
+        if (position) {
+          console.log("Background localization has been started");
+          let resultOfDistance;
+          for (let card of cards) {
+            resultOfDistance = this.calculateDistance(
+              card.objectLocalization.lat,
+              card.objectLocalization.lng,
+              position.latitude,
+              position.longitude
+            );
+
+            if (resultOfDistance <= 150) {
+              this.scheduleNotification(card.cardName);
+            }
+          }
+        } else {
+          console.error("Error with watchPosition(): ", err);
+        }
+      }
+    );
+
+    this.backgroundWatchId = watch;
+  }
+
+  stopLocationWatcher() {
+    BackgroundGeolocation.removeWatcher({ id: this.backgroundWatchId }).then(
+      (r) => console.log("Background localization has been ended")
+    );
   }
 }

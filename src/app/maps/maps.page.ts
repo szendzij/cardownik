@@ -3,10 +3,6 @@ import { Geolocation } from "@capacitor/geolocation";
 import { Platform } from "@ionic/angular";
 import { AppStorageService } from "../core/services/app-storage/app-storage.service";
 import { Card } from "../core/interface/card";
-import {
-  LocalNotifications,
-  ScheduleOptions,
-} from "@capacitor/local-notifications";
 
 @Component({
   selector: "app-Maps",
@@ -20,7 +16,6 @@ export class MapsPage implements OnInit {
   public longitude: number;
   public zoom: number = 15;
   private watchId: any;
-  private isWatchPositionWorks: boolean = false;
   public cards: Card[];
   public markers: any[];
   public currentPosition: google.maps.LatLngLiteral;
@@ -81,21 +76,27 @@ export class MapsPage implements OnInit {
       lat: location.coords.latitude,
       lng: location.coords.longitude,
     };
+    this.markerOptions = {
+      position: {
+        lat: location.coords.latitude,
+        lng: location.coords.longitude,
+      },
+      icon: {
+        url: "./assets/dot.png",
+        scaledSize: new google.maps.Size(24, 24),
+      },
+    };
     this.screenHeight = this.platform.height();
     this.screenWidth = this.platform.width();
   }
 
   async ionViewWillEnter() {
     await this.addMarkers();
+
+    // await this.startLocationWatcher();
   }
 
-  // async ionViewDidEnter() {
-  //   await this.startLocationWatcher();
-  //   console.log(this.watchId);
-  // }
-
   // async ionViewDidLeave() {
-  //   console.log(this.watchId);
   //   this.stopLocationWatcher();
   // }
 
@@ -135,6 +136,16 @@ export class MapsPage implements OnInit {
     this.mapOptions = {
       zoom: (this.zoom = 15),
     };
+    this.markerOptions = {
+      position: {
+        lat: geolocation.coords.latitude,
+        lng: geolocation.coords.longitude,
+      },
+      icon: {
+        url: "./assets/dot.png",
+        scaledSize: new google.maps.Size(24, 24),
+      },
+    };
   }
 
   zoomIn() {
@@ -157,92 +168,4 @@ export class MapsPage implements OnInit {
       rawSvgString.replace(symbols, encodeURIComponent)
     );
   }
-
-  // async startLocationWatcher() {
-  //   const cards = await this.appStorageService.get("my-cards");
-  //   this.watchId = await Geolocation.watchPosition(
-  //     { timeout: 150, maximumAge: 50 },
-  //     async (position, err) => {
-  //       if (position) {
-  //         // this.isWatchPositionWorks = true;
-  //         console.log(position);
-  //         this.markerOptions = {
-  //           position: {
-  //             lat: position?.coords.latitude,
-  //             lng: position?.coords.longitude,
-  //           },
-  //           icon: {
-  //             url: "./assets/dot.png",
-  //             scaledSize: new google.maps.Size(24, 24),
-  //           },
-  //         };
-  //         let resultOfDistance;
-  //         for (let card of cards) {
-  //           resultOfDistance = this.calculateDistance(
-  //             card.objectLocalization.lat,
-  //             card.objectLocalization.lng,
-  //             position.coords.latitude,
-  //             position.coords.longitude
-  //           );
-  //           if (resultOfDistance <= 150.0) {
-  //             this.scheduleNotification();
-  //           }
-  //         }
-  //       } else {
-  //         // this.isWatchPositionWorks = false;
-  //         console.error("Error with watchPosition(): ", err);
-  //       }
-  //     }
-  //   );
-  // }
-
-  // async stopLocationWatcher() {
-  //   await Geolocation.clearWatch({ id: this.watchId });
-  // }
-
-  // async scheduleNotification() {
-  //   let options: ScheduleOptions = {
-  //     notifications: [
-  //       {
-  //         id: 1,
-  //         title: "Cardownik",
-  //         body: "Znajdujesz sie w okolicy zapisanej karty :)",
-  //       },
-  //     ],
-  //   };
-  //   try {
-  //     await LocalNotifications.schedule(options);
-  //   } catch (ex) {
-  //     alert(JSON.stringify(ex));
-  //   }
-  // }
-
-  // calculateDistance(
-  //   lat1: number,
-  //   lon1: number,
-  //   lat2: number,
-  //   lon2: number
-  // ): number {
-  //   // Convert latitudes and longitudes to radians
-  //   const lat1Rad = lat1 * (Math.PI / 180);
-  //   const lat2Rad = lat2 * (Math.PI / 180);
-  //   const lon1Rad = lon1 * (Math.PI / 180);
-  //   const lon2Rad = lon2 * (Math.PI / 180);
-
-  //   // Calculate the distance
-  //   const deltaLat = lat2Rad - lat1Rad;
-  //   const deltaLon = lon2Rad - lon1Rad;
-  //   const a =
-  //     Math.pow(Math.sin(deltaLat / 2), 2) +
-  //     Math.cos(lat1Rad) *
-  //       Math.cos(lat2Rad) *
-  //       Math.pow(Math.sin(deltaLon / 2), 2);
-  //   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-  //   // Earth radius in meters
-  //   const earthRadius = 6371000;
-
-  //   // Return the distance in meters
-  //   return earthRadius * c;
-  // }
 }
